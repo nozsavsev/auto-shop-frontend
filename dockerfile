@@ -45,6 +45,10 @@ FROM base AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
+# Ensure the API URL is available at runtime
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+
 # Uncomment the following line in case you want to disable telemetry during runtime.
 # ENV NEXT_TELEMETRY_DISABLED=1
 

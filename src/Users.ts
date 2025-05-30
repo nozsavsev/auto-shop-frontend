@@ -11,7 +11,13 @@ export class ApiError extends Error {
 export default class UsersAPI {
   private static readonly BASE_PATH = `${process.env.NEXT_PUBLIC_API_URL}/users`;
 
+  static {
+    console.log('NEXT_PUBLIC_API_URL:', process.env.NEXT_PUBLIC_API_URL);
+    console.log('BASE_PATH:', UsersAPI.BASE_PATH);
+  }
+
   public static async getAllUsers(skip: number | null = null, take: number | null = null): Promise<ResponseWrapper<AllUsersDTO>> {
+    console.log('getAllUsers called with BASE_PATH:', UsersAPI.BASE_PATH);
     let url = UsersAPI.BASE_PATH;
     const queryParams = new URLSearchParams();
 
