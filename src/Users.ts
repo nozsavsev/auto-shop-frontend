@@ -1,5 +1,5 @@
 import { Fetcher } from "./Fetcher";
-import { UserDTO, createUpdateUserDTO, ResponseWrapper, ErrorType, hydrateDates, AllUsersDTO } from "./types";
+import { UserDTO, createUpdateUserDTO, ResponseWrapper, ErrorType, hydrateDates, AllUsersDTO, API_URL } from "./types";
 
 export class ApiError extends Error {
   constructor(public status: number, message: string) {
@@ -9,15 +9,9 @@ export class ApiError extends Error {
 }
 
 export default class UsersAPI {
-  private static readonly BASE_PATH = `${process.env.NEXT_PUBLIC_API_URL}/users`;
-
-  static {
-    console.log('NEXT_PUBLIC_API_URL:', process.env.NEXT_PUBLIC_API_URL);
-    console.log('BASE_PATH:', UsersAPI.BASE_PATH);
-  }
+  private static readonly BASE_PATH = `${API_URL}/users`;
 
   public static async getAllUsers(skip: number | null = null, take: number | null = null): Promise<ResponseWrapper<AllUsersDTO>> {
-    console.log('getAllUsers called with BASE_PATH:', UsersAPI.BASE_PATH);
     let url = UsersAPI.BASE_PATH;
     const queryParams = new URLSearchParams();
 

@@ -1,3 +1,5 @@
+export const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://autoshopapi.nozsa.com/api';
+
 export function hydrateDates(data: any) {
   return {
     ...data,

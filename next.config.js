@@ -5,9 +5,13 @@ const nextConfig = {
   reactStrictMode: true,
   // Configure any other Next.js options here
   swcMinify: true,
-  // Ensure environment variables are properly exposed to the client
+  // Remove the NEXT_PUBLIC_ variable from env config since it will be handled at runtime
   env: {
-    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+    // Add any other truly static environment variables here
+  },
+  // Ensure environment variables are available at runtime
+  experimental: {
+    outputFileTracingRoot: process.cwd(),
   },
 }
 

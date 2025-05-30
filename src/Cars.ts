@@ -1,5 +1,5 @@
 import { Fetcher } from "./Fetcher";
-import { CarDTO, createUpdateCarDTO, ErrorType, hydrateDates, ResponseWrapper } from "./types";
+import { API_URL, CarDTO, createUpdateCarDTO, ErrorType, hydrateDates, ResponseWrapper } from "./types";
 
 export class ApiError extends Error {
   constructor(public status: number, message: string) {
@@ -14,7 +14,7 @@ export type AllCarsDTO = {
 };
 
 export default class CarsAPI {
-  private static readonly BASE_PATH = `${process.env.NEXT_PUBLIC_API_URL}/cars`;
+  private static readonly BASE_PATH = `${API_URL}/cars`;
 
   public static async getAllCars(skip: number | null = null, take: number | null = null): Promise<ResponseWrapper<AllCarsDTO>> {
     let url = CarsAPI.BASE_PATH;
