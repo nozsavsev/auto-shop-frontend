@@ -5,6 +5,10 @@ const nextConfig = {
   reactStrictMode: true,
   // Configure any other Next.js options here
   swcMinify: true,
+  // Ensure environment variables are properly exposed to the client
+  env: {
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+  },
 }
 
 module.exports = nextConfig 
