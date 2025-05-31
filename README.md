@@ -10,3 +10,8 @@ There are some CORS issues when deployed in Docker, so to host it, I had to hard
 Usually, I would exclude appsettings.json from the project or simply not store connection strings in there; however, for the sake of making life easier, since there is no actual sensitive information, I left it here
 
 When running, please make sure the database is up and running before api starts. Otherwise, it will fail to apply migrations and die
+
+
+how to run:
+yarn
+yarn dev
