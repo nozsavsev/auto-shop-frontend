@@ -1,5 +1,5 @@
 import { Fetcher } from "./Fetcher";
-import { API_URL, CarDTO, createUpdateCarDTO, ErrorType, hydrateDates, ResponseWrapper } from "./types";
+import { CarDTO, createUpdateCarDTO, ErrorType, hydrateDates, ResponseWrapper, getApiUrl } from "./types";
 
 export class ApiError extends Error {
   constructor(public status: number, message: string) {
@@ -14,10 +14,13 @@ export type AllCarsDTO = {
 };
 
 export default class CarsAPI {
-  private static readonly BASE_PATH = `${API_URL}/cars`;
+  private static async getBasePath() {
+    const apiUrl = await getApiUrl();
+    return `${apiUrl}/cars`;
+  }
 
   public static async getAllCars(skip: number | null = null, take: number | null = null): Promise<ResponseWrapper<AllCarsDTO>> {
-    let url = CarsAPI.BASE_PATH;
+    let url = await CarsAPI.getBasePath();
     const queryParams = new URLSearchParams();
     if (skip !== null) queryParams.append("skip", skip.toString());
     if (take !== null) queryParams.append("take", take.toString());
@@ -37,13 +40,13 @@ export default class CarsAPI {
   }
 
   public static async getCar(id: number): Promise<ResponseWrapper<CarDTO>> {
-    const result = await Fetcher<CarDTO>(`${this.BASE_PATH}/${id}`);
+    const result = await Fetcher<CarDTO>(`${await this.getBasePath()}/${id}`);
     if (!result.error) return { data: hydrateDates(result.data!) };
     return result;
   }
 
   public static async createCar(carData: createUpdateCarDTO): Promise<ResponseWrapper<CarDTO>> {
-    const result = await Fetcher<CarDTO>(this.BASE_PATH, {
+    const result = await Fetcher<CarDTO>(await this.getBasePath(), {
       method: 'POST',
       body: JSON.stringify(carData),
     });
@@ -52,7 +55,7 @@ export default class CarsAPI {
   }
 
   public static async updateCar(id: number, carData: createUpdateCarDTO): Promise<ResponseWrapper<CarDTO>> {
-    const result = await Fetcher<CarDTO>(`${this.BASE_PATH}/${id}`, {
+    const result = await Fetcher<CarDTO>(`${await this.getBasePath()}/${id}`, {
       method: 'PUT',
       body: JSON.stringify(carData),
     });
@@ -61,7 +64,7 @@ export default class CarsAPI {
   }
 
   public static async deleteCar(id: number): Promise<ResponseWrapper<void>> {
-    const result = await Fetcher<void>(`${this.BASE_PATH}/${id}`, {
+    const result = await Fetcher<void>(`${await this.getBasePath()}/${id}`, {
       method: 'DELETE',
     });
     if (!result.error) return { data: undefined };

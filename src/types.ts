@@ -1,4 +1,13 @@
-export const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://autoshopapi.nozsa.com/api';
+var url: string | null = null;
+
+export const getApiUrl = async () => {
+  if (url === null) {
+    const response = await fetch("/api/config");
+    const data = await response.json();
+    url = data.apiUrl;
+  }
+  return url;
+};
 
 export function hydrateDates(data: any) {
   return {

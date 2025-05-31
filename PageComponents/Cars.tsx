@@ -6,9 +6,9 @@ import { AiOutlineLoading } from "react-icons/ai";
 import { IoBanOutline, IoRefreshOutline } from "react-icons/io5";
 import { Id, toast } from "react-toastify";
 import CarRow from "../components/cars/CarRow";
-import Pagination from "../components/cars/Pagination";
 import FillWithCarsButton from "../components/cars/FillWithCarsButton";
 import CreateCarButton from "../components/cars/CreateCarButton";
+import Pagination from "@/components/Pagination";
 
 export default function Cars() {
   const [page, setPage] = useState(0);

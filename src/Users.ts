@@ -1,5 +1,5 @@
 import { Fetcher } from "./Fetcher";
-import { UserDTO, createUpdateUserDTO, ResponseWrapper, ErrorType, hydrateDates, AllUsersDTO, API_URL } from "./types";
+import { UserDTO, createUpdateUserDTO, ResponseWrapper, ErrorType, hydrateDates, AllUsersDTO, getApiUrl,  } from "./types";
 
 export class ApiError extends Error {
   constructor(public status: number, message: string) {
@@ -9,10 +9,13 @@ export class ApiError extends Error {
 }
 
 export default class UsersAPI {
-  private static readonly BASE_PATH = `${API_URL}/users`;
+  private static async getBasePath() {
+    const apiUrl = await getApiUrl();
+    return `${apiUrl}/users`;
+  }
 
   public static async getAllUsers(skip: number | null = null, take: number | null = null): Promise<ResponseWrapper<AllUsersDTO>> {
-    let url = UsersAPI.BASE_PATH;
+    let url = await UsersAPI.getBasePath();
     const queryParams = new URLSearchParams();
 
     if (skip !== null) queryParams.append("skip", skip.toString());
@@ -39,7 +42,7 @@ export default class UsersAPI {
   }
 
   public static async getUser(id: number): Promise<ResponseWrapper<UserDTO>> {
-    const result = await Fetcher<UserDTO>(`${this.BASE_PATH}/${id}`);
+    const result = await Fetcher<UserDTO>(`${await this.getBasePath()}/${id}`);
 
     if (!result.error) return { data: hydrateDates(result.data!) };
 
@@ -47,7 +50,7 @@ export default class UsersAPI {
   }
 
   public static async createUser(userData: createUpdateUserDTO): Promise<ResponseWrapper<UserDTO>> {
-    const result = await Fetcher<UserDTO>(this.BASE_PATH, {
+    const result = await Fetcher<UserDTO>(await this.getBasePath(), {
       method: "POST",
       body: JSON.stringify(userData),
     });
@@ -58,7 +61,7 @@ export default class UsersAPI {
   }
 
   public static async updateUser(id: number, userData: createUpdateUserDTO): Promise<ResponseWrapper<UserDTO>> {
-    const result = await Fetcher<UserDTO>(`${this.BASE_PATH}/${id}`, {
+    const result = await Fetcher<UserDTO>(`${await this.getBasePath()}/${id}`, {
       method: "PUT",
       body: JSON.stringify(userData),
     });
@@ -69,7 +72,7 @@ export default class UsersAPI {
   }
 
   public static async deleteUser(id: number): Promise<ResponseWrapper<void>> {
-    const result = await Fetcher<void>(`${this.BASE_PATH}/${id}`, {
+    const result = await Fetcher<void>(`${await this.getBasePath()}/${id}`, {
       method: "DELETE",
     });
 

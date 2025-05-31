@@ -6,7 +6,7 @@ import { IoBanOutline, IoRefreshOutline } from "react-icons/io5";
 import { Id, toast } from "react-toastify";
 import CreateUserButton from "@/components/users/CreateUserButton";
 import UserRow from "../components/users/UserRow";
-import Pagination from "../components/users/Pagination";
+import Pagination from "../components/Pagination";
 import FillWithUsersButton from "../components/users/FillWithUsersButton";
 import CarsAPI from "@/src/Cars";
 
@@ -103,7 +103,6 @@ export default function Users() {
                   user={user}
                   cars={cars}
                   carsLoading={carsLoading}
-                  refreshCars={fetchCars}
                   updateUser={async (newUser: createUpdateUserDTO | null, toastId: Id | null) => {
                     if (newUser) {
                       const result = await updateUser(user.id, newUser);

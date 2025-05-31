@@ -1,12 +1,14 @@
 import { Fetcher } from "./Fetcher";
-import { API_URL } from "./types";
-
+import { getApiUrl } from "./types";
 
 export default class StatusAPI {
-  private static readonly BASE_PATH = `${API_URL}/status`;
+  private static async getBasePath() {
+    const apiUrl = await getApiUrl();
+    return `${apiUrl}/status`;
+  }
 
   public static async isAlive(): Promise<boolean> {
-    const isAlive = await Fetcher<any>(this.BASE_PATH);
+    const isAlive = await Fetcher<any>(await this.getBasePath());
     return !isAlive.error;
   }
 }

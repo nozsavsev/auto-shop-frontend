@@ -14,7 +14,7 @@ interface PaginationProps {
 
 export default function Pagination({ pagination }: PaginationProps) {
   return (
-    <div className="absolute left-1/2 bottom-2 -translate-x-1/2 z-20 bg-white/90 rounded-lg shadow-lg px-2 py-1 flex flex-col sm:flex-row items-center gap-1 sm:gap-2 border border-gray-200 text-xs sm:text-sm">
+    <div className="absolute left-1/2 bottom-2 -translate-x-1/2 z-20 bg-white rounded-lg shadow-lg p-2 flex flex-col sm:flex-row items-center gap-1 sm:gap-2 border border-neutral-300 text-xs sm:text-sm">
       <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
         <label htmlFor="pageSize" className="text-xs sm:text-sm text-gray-700 whitespace-nowrap">
           Items per page:
@@ -35,13 +35,12 @@ export default function Pagination({ pagination }: PaginationProps) {
           <option value={50}>50</option>
         </select>
       </div>
-      <nav className="inline-flex -space-x-px rounded-md shadow-sm isolate" aria-label="Pagination">
+      <div className="inline-flex -space-x-px rounded-md shadow-sm isolate" aria-label="Pagination">
         <button
           onClick={() => pagination.setPage(pagination.currentPage - 1)}
           disabled={!pagination.hasPrevPage}
           className="relative inline-flex items-center px-2 py-1 text-gray-400 rounded-l-md border border-gray-300 bg-white text-xs sm:text-sm font-medium hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <span className="sr-only">Previous</span>
           <IoChevronBack className="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
         {pagination.totalPages > 0 && (() => {
@@ -89,10 +88,9 @@ export default function Pagination({ pagination }: PaginationProps) {
           disabled={!pagination.hasNextPage}
           className="relative inline-flex items-center px-2 py-1 text-gray-400 rounded-r-md border border-gray-300 bg-white text-xs sm:text-sm font-medium hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <span className="sr-only">Next</span>
           <IoChevronForward className="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
-      </nav>
+      </div>
     </div>
   );
 } 
