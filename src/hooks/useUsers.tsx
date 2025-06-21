@@ -75,14 +75,11 @@ export function useUsers(initialPage: number = 0, initialPageSize: number = 10, 
     return response;
   };
 
-  // Calculate pagination values, using initial data if available
-  const totalCount = data?.data?.totalCount ?? initialData?.data?.totalCount ?? 0;
-  const totalPages = totalCount > 0 ? Math.ceil(totalCount / pageSize) : 0;
-  const hasNextPage = page < totalPages - 1;
-  const hasPrevPage = page > 0;
+  const totalCount = data?.data?.totalCount ?? 0;
+  const totalPages = totalCount ? Math.ceil(totalCount / pageSize) : 0;
 
   return {
-    users: data?.data?.users ?? initialData?.data?.users ?? [],
+    users: data?.data?.users ?? [],
     isLoading,
     error: error || data?.error,
     apiError: data?.error,
@@ -92,10 +89,10 @@ export function useUsers(initialPage: number = 0, initialPageSize: number = 10, 
     pagination: {
       currentPage: page,
       pageSize: pageSize,
-      totalCount: totalCount,
+      totalUsers: totalCount,
       totalPages: totalPages,
-      hasNextPage: hasNextPage,
-      hasPrevPage: hasPrevPage,
+      hasNextPage: page < totalPages - 1,
+      hasPrevPage: page > 0,
       setPage: setPage,
       setPageSize: setPageSize,
     },

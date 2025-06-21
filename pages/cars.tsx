@@ -25,29 +25,31 @@ type CarsPageQuery = {
   t?: number;
 };
 
-export default function Cars({ initialSearch, initialPage, initialPageSize, initialCars }: CarsPageProps) {
+export default function Cars({ initialSearch, initialPage, initialPageSize }: CarsPageProps) {
   const router = useRouter();
   const [search, setSearch] = useState(initialSearch);
-  const { cars, isLoading, error, refresh, updateCar, deleteCar, pagination } = useCars(initialPage, initialPageSize, search, initialCars);
+  const { cars, isLoading, error, refresh, updateCar, deleteCar, pagination } = useCars(initialPage, initialPageSize, search);
   
   const {currentPage, pageSize} = pagination;
 
   useEffect(() => {
-    router.replace(
-      {
-        pathname: router.pathname,
-        query: {
-          q: search || undefined,
-          s: currentPage || undefined,
-          t: pageSize || undefined,
+    if (router.isReady) {
+      router.replace(
+        {
+          pathname: router.pathname,
+          query: {
+            q: search || undefined,
+            s: currentPage || undefined,
+            t: pageSize || undefined,
+          },
         },
-      },
-      undefined,
-      {
-        shallow: true,
-      }
-    );
-  }, [search, currentPage, pageSize]);
+        undefined,
+        {
+          shallow: true,
+        }
+      );
+    }
+  }, [search, currentPage, pageSize, router.isReady]);
 
   return (
     <div className="flex flex-col w-full p-6 h-[calc(100vh-4rem)]">
@@ -132,14 +134,18 @@ export async function getServerSideProps(ctx: GetServerSidePropsContext) {
   const cars = await API.SSR.Cars.SearchCars({
     skip: initialPage * initialPageSize,
     take: initialPageSize,
-    textMatch: initialSearch || undefined,
+    textMatch: initialSearch,
   });     
   
   console.log({ initialSearch, initialPage, initialPageSize, initialCars: cars });
 
-  
   return {
-    props: { initialSearch, initialPage, initialPageSize, initialCars: cars },
+    props: { 
+      initialSearch, 
+      initialPage, 
+      initialPageSize, 
+      initialCars: cars 
+    },
   };
 }
 

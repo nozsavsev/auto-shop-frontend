@@ -7,7 +7,7 @@ export function useCars(initialPage: number = 0, initialPageSize: number = 10, t
   const [page, setPage] = useState(initialPage);
   const [pageSize, setPageSize] = useState(initialPageSize);
 
-    const { data, error, isLoading, mutate } = useSWR<ResponseWrapper<AllCarsDTO>>(
+  const { data, error, isLoading, mutate } = useSWR<ResponseWrapper<AllCarsDTO>>(
     [page, pageSize, textMatch],
     async () => await API.Client.Cars.SearchCars({ skip: page * pageSize, take: pageSize, textMatch: textMatch }),
     {
@@ -24,8 +24,8 @@ export function useCars(initialPage: number = 0, initialPageSize: number = 10, t
     mutate();
   }, [textMatch]);
 
-    const updateCar = async (carId: number, updatedCar: CreateUpdateCarDTO) => {
-      const response = await API.Client.Cars.UpdateCar({ id: carId, createUpdateCarDTO: updatedCar });
+  const updateCar = async (carId: number, updatedCar: CreateUpdateCarDTO) => {
+    const response = await API.Client.Cars.UpdateCar({ id: carId, createUpdateCarDTO: updatedCar });
     if (!response.error && response.data) {
       await mutate(
         (currentData) => {
@@ -67,14 +67,11 @@ export function useCars(initialPage: number = 0, initialPageSize: number = 10, t
     return response;
   };
 
-  // Calculate pagination values, using initial data if available
-  const totalCount = data?.data?.totalCount ?? initialData?.data?.totalCount ?? 0;
-  const totalPages = totalCount > 0 ? Math.ceil(totalCount / pageSize) : 0;
-  const hasNextPage = page < totalPages - 1;
-  const hasPrevPage = page > 0;
+  const totalCount = data?.data?.totalCount ?? 0;
+  const totalPages = totalCount ? Math.ceil(totalCount / pageSize) : 0;
 
   return {
-    cars: data?.data?.cars ?? initialData?.data?.cars ?? [],
+    cars: data?.data?.cars ?? [],
     isLoading,
     error: error || data?.error,
     apiError: data?.error,
@@ -84,10 +81,10 @@ export function useCars(initialPage: number = 0, initialPageSize: number = 10, t
     pagination: {
       currentPage: page,
       pageSize: pageSize,
-      totalCount: totalCount,
+      totalUsers: totalCount,
       totalPages: totalPages,
-      hasNextPage: hasNextPage,
-      hasPrevPage: hasPrevPage,
+      hasNextPage: page < totalPages - 1,
+      hasPrevPage: page > 0,
       setPage: setPage,
       setPageSize: setPageSize,
     },

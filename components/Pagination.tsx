@@ -4,6 +4,7 @@ interface PaginationProps {
   pagination: {
     currentPage: number;
     pageSize: number;
+    totalUsers: number;
     totalPages: number;
     hasNextPage: boolean;
     hasPrevPage: boolean;
