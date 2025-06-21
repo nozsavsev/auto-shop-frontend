@@ -1,5 +1,6 @@
+import { API } from "@/src/API";
+import { faker } from "@faker-js/faker";
 import { toast } from "react-toastify";
-import UsersAPI from "@/src/Users";
 
 interface FillWithUsersButtonProps {
   refresh: () => void;
@@ -14,16 +15,15 @@ export default function FillWithUsersButton({ refresh }: FillWithUsersButtonProp
         let created = 0;
         const total = 1000;
         function randomUser() {
-          const id = Math.floor(Math.random() * 1000000);
           return {
-            name: `User${id}`,
-            email: `user${id}@example.com`,
-            password: "password123",
+            name: `${faker.person.firstName()} ${faker.person.lastName()}`,
+            email: faker.internet.email(),
+            password: faker.internet.password({ length: 12 }),
           };
         }
         for (let i = 0; i < total; i++) {
           const user = randomUser();
-          await UsersAPI.createUser(user);
+          await API.Client.Users.CreateUser({ createUpdateUserDTO: user });
           created++;
           const percent = Math.min(100, Math.round((created / total) * 100));
           toast.update(toastId, { render: `Filling with 1000 users... ${percent}%`, progress: percent / 100 });

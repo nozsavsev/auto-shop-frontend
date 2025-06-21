@@ -1,12 +1,12 @@
 import { Dialog } from "@headlessui/react";
 import { useState } from "react";
-import { CarDTO, createUpdateCarDTO } from "@/src/types";
+import { CarDTO, CreateUpdateCarDTO } from "@/src/API/AutoShopApi";
 
 interface EditCarModalProps {
   open: boolean;
   onClose: () => void;
   car: CarDTO;
-  onSave: (data: createUpdateCarDTO) => Promise<void>;
+  onSave: (data: CreateUpdateCarDTO) => Promise<void>;
   loading?: boolean;
 }
 
@@ -34,7 +34,7 @@ export default function EditCarModal({ open, onClose, car, onSave, loading }: Ed
               <input
                 type="text"
                 id="company"
-                value={formData.company}
+                value={formData.company ?? ""}
                 onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
@@ -45,7 +45,7 @@ export default function EditCarModal({ open, onClose, car, onSave, loading }: Ed
               <input
                 type="text"
                 id="model"
-                value={formData.model}
+                value={formData.model ?? ""}
                 onChange={(e) => setFormData({ ...formData, model: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required

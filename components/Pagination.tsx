@@ -14,7 +14,7 @@ interface PaginationProps {
 
 export default function Pagination({ pagination }: PaginationProps) {
   return (
-    <div className="absolute left-1/2 bottom-2 -translate-x-1/2 z-20 bg-white rounded-lg shadow-lg p-2 flex flex-col sm:flex-row items-center gap-1 sm:gap-2 border border-neutral-300 text-xs sm:text-sm">
+    <div className="bg-white shrink-0 rounded-lg shadow-lg p-2 flex flex-col sm:flex-row items-center gap-1 sm:gap-2 border border-neutral-300 text-xs sm:text-sm">
       <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
         <label htmlFor="pageSize" className="text-xs sm:text-sm text-gray-700 whitespace-nowrap">
           Items per page:

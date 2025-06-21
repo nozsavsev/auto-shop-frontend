@@ -1,4 +1,4 @@
-import StatusAPI from "@/src/Status";
+import { API } from "@/src/API";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
@@ -9,7 +9,7 @@ const Er_500 = ({}: any) => {
 
   useEffect(() => {
     const interval = setInterval(async () => {
-      const isConnected = await StatusAPI.isAlive();
+      const isConnected = await API.Client.Status.GetStatus();
       if (isConnected) {
         setIsConnected(true);
 

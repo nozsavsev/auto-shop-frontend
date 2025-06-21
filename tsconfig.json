@@ -17,6 +17,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/Fetcher.tss", "src/Cars.tss", "src/types.tss", "src/Status.tss", "src/Users.tss", "pages/old index"],
   "exclude": ["node_modules"]
 }

@@ -6,4 +6,18 @@ body {
     font-family: 'Poppins', sans-serif;
 }
 
+button {
+    cursor: pointer;
+}
 
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.no-scrollbar {
+    scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}

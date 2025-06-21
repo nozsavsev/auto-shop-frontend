@@ -1,16 +1,15 @@
 import { useEffect, useState } from "react";
-import { UserDTO, createUpdateUserDTO, CarDTO } from "@/src/types";
 import { Id, toast } from "react-toastify";
 import { FiTrash } from "react-icons/fi";
 import { IoEyeOffOutline, IoEyeOutline, IoPencil } from "react-icons/io5";
-import CarsAPI from "@/src/Cars";
 import { Dialog } from "@headlessui/react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { CarDTO, CreateUpdateUserDTO, UserDTO } from "@/src/API/AutoShopApi";
 
 interface UserRowProps {
   user: UserDTO;
-  updateUser: (user: createUpdateUserDTO | null, toastId: Id | null) => void;
+  updateUser: (user: CreateUpdateUserDTO | null, toastId: Id | null) => void;
   cars: CarDTO[];
   carsLoading: boolean;
 }
@@ -31,16 +30,16 @@ export default function UserRow({ user, updateUser, cars, carsLoading }: UserRow
     password: string;
     carId: number | null;
   }>({
-    name: user.name,
-    email: user.email,
+    name: user.name ?? "",
+    email: user.email ?? "",
     password: "",
     carId: user.car?.id ?? null,
   });
 
   useEffect(() => {
     setFormData({
-      name: user.name,
-      email: user.email,
+      name: user.name ?? "",
+      email: user.email ?? "",
       password: "",
       carId: user.car?.id ?? null,
     });
@@ -49,7 +48,7 @@ export default function UserRow({ user, updateUser, cars, carsLoading }: UserRow
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const toastId = toast.loading("Updating user...");
-    const updateData: createUpdateUserDTO = {
+    const updateData: CreateUpdateUserDTO = {
       name: formData.name,
       email: formData.email,
       password: formData.password || null,
@@ -79,8 +78,8 @@ export default function UserRow({ user, updateUser, cars, carsLoading }: UserRow
             <span className="text-gray-500">No car</span>
           )}
         </td>
-        <td className="px-3 py-1.5 whitespace-nowrap text-sm text-gray-500">{user.createdAt.toLocaleString()}</td>
-        <td className="px-3 py-1.5 whitespace-nowrap text-sm text-gray-500">{user.updatedAt.toLocaleString()}</td>
+        <td className="px-3 py-1.5 whitespace-nowrap text-sm text-gray-500">{user.createdAt?.toLocaleString()}</td>
+        <td className="px-3 py-1.5 whitespace-nowrap text-sm text-gray-500">{user.updatedAt?.toLocaleString()}</td>
         <td className="px-3 py-1.5 whitespace-nowrap text-sm text-gray-500">
           <button
             className="text-red-600 hover:text-red-700 cursor-pointer"
@@ -106,7 +105,7 @@ export default function UserRow({ user, updateUser, cars, carsLoading }: UserRow
                 validationSchema={validationSchema}
                 onSubmit={async (values, { setSubmitting }) => {
                   const toastId = toast.loading("Updating user...");
-                  const updateData: createUpdateUserDTO = {
+                  const updateData: CreateUpdateUserDTO = {
                     name: values.name,
                     email: values.email,
                     password: values.password || null,

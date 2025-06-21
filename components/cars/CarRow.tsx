@@ -1,15 +1,15 @@
 import { useState } from "react";
-import { CarDTO, createUpdateCarDTO } from "@/src/types";
 import { Id, toast } from "react-toastify";
 import { FiTrash } from "react-icons/fi";
 import { IoPencil } from "react-icons/io5";
 import { Dialog } from "@headlessui/react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { CarDTO, CreateUpdateCarDTO } from "@/src/API/AutoShopApi";
 
 interface CarRowProps {
   car: CarDTO;
-  updateCar: (car: createUpdateCarDTO | null, toastId: Id | null) => void;
+  updateCar: (car: CreateUpdateCarDTO | null, toastId: Id | null) => void;
 }
 
 const validationSchema = Yup.object().shape({
@@ -31,9 +31,9 @@ export default function CarRow({ car, updateCar }: CarRowProps) {
         <td className="text-center px-1 whitespace-nowrap text-sm text-gray-500">{car.id}</td>
         <td className="px-3 py-1.5 whitespace-nowrap text-sm text-gray-500">{car.company}</td>
         <td className="px-3 py-1.5 whitespace-nowrap text-sm text-gray-500">{car.model}</td>
-        <td className="px-3 py-1.5 whitespace-nowrap text-sm text-gray-500">{car.users.length > 0 ? car.users.length : "No "} users</td>
-        <td className="px-3 py-1.5 whitespace-nowrap text-sm text-gray-500">{car.createdAt.toLocaleString()}</td>
-        <td className="px-3 py-1.5 whitespace-nowrap text-sm text-gray-500">{car.updatedAt.toLocaleString()}</td>
+        <td className="px-3 py-1.5 whitespace-nowrap text-sm text-gray-500">{car.users?.length ?? 0} users</td>
+        <td className="px-3 py-1.5 whitespace-nowrap text-sm text-gray-500">{car.createdAt?.toLocaleString()}</td>
+        <td className="px-3 py-1.5 whitespace-nowrap text-sm text-gray-500">{car.updatedAt?.toLocaleString()}</td>
         <td className="px-3 py-1.5 whitespace-nowrap text-sm text-gray-500">
           <button
             className="text-red-600 hover:text-red-700 cursor-pointer"
@@ -61,7 +61,7 @@ export default function CarRow({ car, updateCar }: CarRowProps) {
                 validationSchema={validationSchema}
                 onSubmit={async (values, { setSubmitting }) => {
                   const toastId = toast.loading("Updating car...");
-                  const updateData: createUpdateCarDTO = {
+                  const updateData: CreateUpdateCarDTO = {
                     company: values.company,
                     model: values.model,
                   };

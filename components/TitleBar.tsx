@@ -1,12 +1,12 @@
+import Link from "next/link";
+import { useRouter } from "next/router";
 import { IoCar, IoCarOutline, IoInformationCircle, IoInformationCircleOutline, IoPerson, IoPersonOutline } from "react-icons/io5";
-import { Link, useLocation } from "react-router-dom";
 
 export default function TitleBar() {
-  const location = useLocation();
+  
+  const router = useRouter();
 
-  if (location.pathname === "/404") {
-    return null;
-  }
+
 
   return (
     <header className="bg-white shadow-md mb-2 h-[4rem]">
@@ -14,7 +14,7 @@ export default function TitleBar() {
         <div className="flex justify-between items-center h-16">
           <div className="flex-shrink-0">
             <Link
-              to="/"
+              href="/"
               className="text-normal md:text-xl font-bold text-gray-800 hover:text-gray-600"
             >
               Auto Shop
@@ -23,7 +23,7 @@ export default function TitleBar() {
 
           <nav className="flex space-x-2 md:space-x-8">
             <Link
-              to="/"
+              href="/"
               className={`inline-flex items-center px-1 pt-1 text-sm font-medium ${
                 location.pathname === "/" || location.pathname === "/users"
                   ? "text-blue-600 border-b-2 border-blue-600 font-semibold"
@@ -39,7 +39,7 @@ export default function TitleBar() {
             </Link>
 
             <Link
-              to="/cars"
+              href="/cars"
               className={`inline-flex items-center px-1 pt-1 text-sm font-medium ${
                 location.pathname === "/cars"
                   ? "text-blue-600 border-b-2 border-blue-600 font-semibold"
@@ -53,7 +53,7 @@ export default function TitleBar() {
             </Link>
 
             <Link
-              to="/about"
+              href="/about"
               className={`inline-flex items-center px-1 pt-1 text-sm font-medium ${
                 location.pathname === "/about"
                   ? "text-blue-600 border-b-2 border-blue-600 font-semibold"

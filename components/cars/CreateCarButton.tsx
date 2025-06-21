@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
-import CarsAPI from "@/src/Cars";
 import { IoAddOutline, IoShuffleOutline } from "react-icons/io5";
 import { Dialog } from "@headlessui/react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { API } from "@/src/API";
+import { faker } from "@faker-js/faker";
 
 interface CreateCarButtonProps {
   onSuccess: () => void;
@@ -16,10 +17,9 @@ const validationSchema = Yup.object().shape({
 });
 
 function randomCar() {
-  const id = Math.floor(Math.random() * 1000000);
   return {
-    company: `Company${id}`,
-    model: `Model${id}`,
+    company: faker.vehicle.manufacturer(),
+    model: faker.vehicle.model(),
   };
 }
 
@@ -46,7 +46,7 @@ export default function CreateCarButton({ onSuccess }: CreateCarButtonProps) {
               onSubmit={async (values, { setSubmitting, resetForm }) => {
                 const toastId = toast.loading("Creating car...");
                 try {
-                  const response = await CarsAPI.createCar(values);
+                  const response = await API.Client.Cars.CreateCar({ createUpdateCarDTO: values });
                   if (response.error) {
                     toast.update(toastId, { render: "Failed to create car", type: "error", isLoading: false, autoClose: 3000 });
                   } else {

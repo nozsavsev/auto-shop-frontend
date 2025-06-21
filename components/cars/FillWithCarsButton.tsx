@@ -1,5 +1,6 @@
+import { API } from "@/src/API";
+import { faker } from "@faker-js/faker";
 import { toast } from "react-toastify";
-import CarsAPI from "@/src/Cars";
 
 interface FillWithCarsButtonProps {
   refresh: () => void;
@@ -14,15 +15,14 @@ export default function FillWithCarsButton({ refresh }: FillWithCarsButtonProps)
         let created = 0;
         const total = 1000;
         function randomCar() {
-          const id = Math.floor(Math.random() * 1000000);
           return {
-            company: `Company${id}`,
-            model: `Model${id}`,
+            company: faker.vehicle.manufacturer(),
+            model: faker.vehicle.model(),
           };
         }
         for (let i = 0; i < total; i++) {
           const car = randomCar();
-          await CarsAPI.createCar(car);
+          await API.Client.Cars.CreateCar({ createUpdateCarDTO: car });
           created++;
           const percent = Math.min(100, Math.round((created / total) * 100));
           toast.update(toastId, { render: `Filling with 1000 cars... ${percent}%`, progress: percent / 100 });

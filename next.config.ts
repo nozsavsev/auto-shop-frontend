@@ -1,17 +1,8 @@
 import type { NextConfig } from "next";
-
+const { withSuperjson } = require("next-superjson");
 const nextConfig: NextConfig = {
   /* config options here */
   reactStrictMode: true,
-  output: 'standalone',
-  async rewrites() {
-    return [
-      {
-        source: '/:path*',
-        destination: '/',
-      },
-    ];
-  },
+  output: "standalone",
 };
-
-export default nextConfig;
+module.exports = withSuperjson()(nextConfig);

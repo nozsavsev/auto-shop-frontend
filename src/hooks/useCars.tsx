@@ -1,16 +1,15 @@
+import { useEffect, useState } from "react";
 import useSWR from "swr";
-import React, { useEffect, useState } from "react";
-import { API, ResponseWrapper } from "../API";
-import { AllUsersDTO, CreateUpdateUserDTO } from "../API/AutoShopApi/models";
-import { ApiUsersIdPutRequest } from "../API/AutoShopApi";
+import { ResponseWrapper, API } from "../API";
+import { AllCarsDTO, CarDTO, CreateUpdateCarDTO } from "../API/AutoShopApi";
 
-export function useUsers(initialPage: number = 0, initialPageSize: number = 10, textMatch: string | undefined = undefined, initialData: ResponseWrapper<AllUsersDTO> | undefined = undefined) {
+export function useCars(initialPage: number = 0, initialPageSize: number = 10, textMatch: string | undefined = undefined, initialData: ResponseWrapper<AllCarsDTO> | undefined = undefined){
   const [page, setPage] = useState(initialPage);
   const [pageSize, setPageSize] = useState(initialPageSize);
 
-  const { data, error, isLoading, mutate } = useSWR<ResponseWrapper<AllUsersDTO>>(
+    const { data, error, isLoading, mutate } = useSWR<ResponseWrapper<AllCarsDTO>>(
     [page, pageSize, textMatch],
-    async () => await API.Client.Users.SearchUsers({ skip: page * pageSize, take: pageSize, textMatch: textMatch }),
+    async () => await API.Client.Cars.SearchCars({ skip: page * pageSize, take: pageSize, textMatch: textMatch }),
     {
       fallbackData: initialData,
       revalidateOnFocus: true,
@@ -20,58 +19,51 @@ export function useUsers(initialPage: number = 0, initialPageSize: number = 10, 
       keepPreviousData: true,
     }
   );
-  
+
   useEffect(() => {
     mutate();
   }, [textMatch]);
 
-  const updateUser = async (userId: number, updatedUser: CreateUpdateUserDTO) => {
-    const response = await API.Client.Users.UpdateUser({ id: userId, createUpdateUserDTO: updatedUser });
-
+    const updateCar = async (carId: number, updatedCar: CreateUpdateCarDTO) => {
+      const response = await API.Client.Cars.UpdateCar({ id: carId, createUpdateCarDTO: updatedCar });
     if (!response.error && response.data) {
       await mutate(
         (currentData) => {
-          if (!currentData?.data?.users) return currentData;
-
-          const updatedUsers = currentData.data.users.map((user) => (user.id === userId ? response.data : user));
-
+          if (!currentData?.data?.cars) return currentData;
+          const updatedCars = currentData.data.cars.map((car) => (car.id === carId ? (response.data as CarDTO) : car));
           return {
             ...currentData,
             data: {
               ...currentData.data,
-              users: updatedUsers,
+              cars: updatedCars,
             },
-          } as ResponseWrapper<AllUsersDTO>;
+          };
         },
         { revalidate: false }
       );
     }
-
     return response;
   };
 
-  const deleteUser = async (userId: number) => {
-    const response = await API.Client.Users.DeleteUser({ id: userId });
-
+  const deleteCar = async (carId: number) => {
+    const response = await API.Client.Cars.DeleteCar({ id: carId });
     if (!response.error) {
       await mutate(
         (currentData) => {
-          if (!currentData?.data?.users) return currentData;
-          const updatedUsers = currentData.data.users.filter((user) => user.id !== userId);
-
+          if (!currentData?.data?.cars) return currentData;
+          const updatedCars = currentData.data.cars.filter((car) => car.id !== carId);
           return {
             ...currentData,
             data: {
               ...currentData.data,
-              users: updatedUsers,
+              cars: updatedCars,
               totalCount: (currentData.data.totalCount ?? 1) - 1,
             },
-          } as ResponseWrapper<AllUsersDTO>;
+          };
         },
         { revalidate: true }
       );
     }
-
     return response;
   };
 
@@ -82,13 +74,13 @@ export function useUsers(initialPage: number = 0, initialPageSize: number = 10, 
   const hasPrevPage = page > 0;
 
   return {
-    users: data?.data?.users ?? initialData?.data?.users ?? [],
+    cars: data?.data?.cars ?? initialData?.data?.cars ?? [],
     isLoading,
     error: error || data?.error,
     apiError: data?.error,
     refresh: mutate,
-    updateUser,
-    deleteUser,
+    updateCar,
+    deleteCar,
     pagination: {
       currentPage: page,
       pageSize: pageSize,

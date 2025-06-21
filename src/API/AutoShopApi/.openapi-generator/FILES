@@ -1,0 +1,16 @@
+.openapi-generator-ignore
+apis/CarsApi.ts
+apis/StatusApi.ts
+apis/UsersApi.ts
+apis/index.ts
+index.ts
+models/AllCarsDTO.ts
+models/AllUsersDTO.ts
+models/CarBasicDTO.ts
+models/CarDTO.ts
+models/CreateUpdateCarDTO.ts
+models/CreateUpdateUserDTO.ts
+models/UserBasicDTO.ts
+models/UserDTO.ts
+models/index.ts
+runtime.ts

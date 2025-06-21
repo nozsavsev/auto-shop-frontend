@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { IoAddOutline, IoEyeOffOutline, IoEyeOutline, IoShuffleOutline } from "react-icons/io5";
-import { createUpdateUserDTO } from "@/src/types";
 import { Id, toast } from "react-toastify";
-import UsersAPI from "@/src/Users";
 import { Field, Formik, Form} from "formik";
 import { faker } from "@faker-js/faker";
 import { Dialog } from "@headlessui/react";
 import * as Yup from "yup";
+import { API } from "@/src/API";
+import { CreateUpdateUserDTO } from "@/src/API/AutoShopApi";
 
 interface CreateUserButtonProps {
   onSuccess: () => void;
@@ -15,10 +15,10 @@ interface CreateUserButtonProps {
 export default function CreateUserButton({ onSuccess }: CreateUserButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleSubmit = async (values: Omit<createUpdateUserDTO, "carId">, { setSubmitting, resetForm }: any) => {
+  const handleSubmit = async (values: Omit<CreateUpdateUserDTO, "carId">, { setSubmitting, resetForm }: any) => {
     const toastId = toast.loading("Creating user...");
     try {
-      const response = await UsersAPI.createUser({ ...values, carId: null });
+      const response = await API.Client.Users.CreateUser({ createUpdateUserDTO: values });
       if (response.error) {
         toast.update(toastId, { render: "Failed to create user", type: "error", isLoading: false, autoClose: 3000 });
       } else {
@@ -62,7 +62,7 @@ const AddUserSchema = Yup.object().shape({
 interface CreateUserFormProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (values: Omit<createUpdateUserDTO, "carId">, helpers: any) => Promise<void>;
+  onSubmit: (values: Omit<CreateUpdateUserDTO, "carId">, helpers: any) => Promise<void>;
 }
 
 function CreateUserForm({ isOpen, onClose, onSubmit }: CreateUserFormProps) {
@@ -82,7 +82,7 @@ function CreateUserForm({ isOpen, onClose, onSubmit }: CreateUserFormProps) {
       <div className="fixed inset-0 flex items-center justify-center p-4">
         <Dialog.Panel className="mx-auto max-w-sm rounded-lg bg-white p-6 w-full">
           <Formik
-            initialValues={{ name: "", email: "", password: "" } as Omit<createUpdateUserDTO, "carId">}
+            initialValues={{ name: "", email: "", password: "" } as Omit<CreateUpdateUserDTO, "carId">}
             validationSchema={AddUserSchema}
             onSubmit={onSubmit}
           >
