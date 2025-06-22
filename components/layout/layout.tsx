@@ -10,6 +10,8 @@ import { IoInformationCircleOutline } from "react-icons/io5";
 export default function Layout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  
   return (
     <div className="h-screen relative w-screen bg-neutral-100 overflow-y-auto no-scrollbar overflow-x-hidden">
       {process.env.NODE_ENV == "development" && (

@@ -1,8 +1,6 @@
 import { 
   FaRegCalendarAlt, 
   FaReact, 
-  FaNodeJs, 
-  FaDatabase, 
   FaCode, 
   FaRocket, 
   FaShieldAlt, 
@@ -17,7 +15,7 @@ import {
   FaCog,
   FaCheckCircle
 } from "react-icons/fa";
-import { SiTypescript, SiTailwindcss, SiNextdotjs, SiSwr, SiFormik } from "react-icons/si";
+import { SiTypescript, SiTailwindcss, SiNextdotjs, SiSwr, SiFormik, SiPostgresql, SiDotnet } from "react-icons/si";
 import { IoStatsChart } from "react-icons/io5";
 
 export default function About() {
@@ -62,8 +60,8 @@ export default function About() {
     { icon: <SiSwr className="w-8 h-8" />, name: "SWR", category: "Data Fetching" },
     { icon: <SiFormik className="w-8 h-8" />, name: "Formik", category: "Forms" },
     { icon: <FaShieldAlt className="w-8 h-8" />, name: "Yup", category: "Validation" },
-    { icon: <FaNodeJs className="w-8 h-8" />, name: "Node.js", category: "Backend" },
-    { icon: <FaDatabase className="w-8 h-8" />, name: "Database", category: "Data" }
+    { icon: <SiDotnet className="w-8 h-8" />, name: ".NET", category: "Backend" },
+    { icon: <SiPostgresql className="w-8 h-8" />, name: "PostgreSQL", category: "Database" }
   ];
 
   const highlights = [
