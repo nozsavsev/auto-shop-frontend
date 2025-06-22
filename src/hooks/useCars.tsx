@@ -1,17 +1,45 @@
 import { useEffect, useState } from "react";
-import useSWR from "swr";
+import useSWR, { KeyedMutator } from "swr";
 import { ResponseWrapper, API } from "../API";
 import { AllCarsDTO, CarDTO, CreateUpdateCarDTO } from "../API/AutoShopApi";
 
-export function useCars(initialPage: number = 0, initialPageSize: number = 10, textMatch: string | undefined = undefined, initialData: ResponseWrapper<AllCarsDTO> | undefined = undefined){
+export type useCarsParams = {
+  initialPage: number;
+  initialPageSize: number;
+  textMatch: string | undefined;
+  initialData: ResponseWrapper<AllCarsDTO> | undefined;
+};
+
+export type useCarsType = {
+  cars: CarDTO[];
+  isLoading: boolean;
+  error: Error | "NOT_FOUND" | "BAD_REQUEST" | "INTERNAL_SERVER_ERROR" | "NETWORK_ERROR" | undefined | null;
+  apiError: Error | "NOT_FOUND" | "BAD_REQUEST" | "INTERNAL_SERVER_ERROR" | "NETWORK_ERROR" | undefined | null;
+  refresh: KeyedMutator<ResponseWrapper<AllCarsDTO>>;
+  updateCar: (carId: number, updatedCar: CreateUpdateCarDTO) => Promise<ResponseWrapper<CarDTO>>;
+  deleteCar: (carId: number) => Promise<ResponseWrapper<void>>;
+  pagination: {
+    currentPage: number;
+    pageSize: number;
+    totalItems: number;
+    totalPages: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+    setPage: (page: number) => void;
+    setPageSize: (pageSize: number) => void;
+  };
+};
+
+export function useCars({ initialPage, initialPageSize, textMatch, initialData }: useCarsParams): useCarsType {
   const [page, setPage] = useState(initialPage);
   const [pageSize, setPageSize] = useState(initialPageSize);
 
   const { data, error, isLoading, mutate } = useSWR<ResponseWrapper<AllCarsDTO>>(
-    [page, pageSize, textMatch],
+    [page, pageSize, textMatch, initialData],
     async () => await API.Client.Cars.SearchCars({ skip: page * pageSize, take: pageSize, textMatch: textMatch }),
     {
       fallbackData: initialData,
+      revalidateOnMount: false,
       revalidateOnFocus: true,
       revalidateOnReconnect: true,
       dedupingInterval: 1000 * 5,
@@ -45,7 +73,7 @@ export function useCars(initialPage: number = 0, initialPageSize: number = 10, t
     return response;
   };
 
-  const deleteCar = async (carId: number) => {
+  const deleteCar = async (carId: number):Promise<ResponseWrapper<void>> => {
     const response = await API.Client.Cars.DeleteCar({ id: carId });
     if (!response.error) {
       await mutate(
@@ -81,7 +109,7 @@ export function useCars(initialPage: number = 0, initialPageSize: number = 10, t
     pagination: {
       currentPage: page,
       pageSize: pageSize,
-      totalUsers: totalCount,
+      totalItems: totalCount,
       totalPages: totalPages,
       hasNextPage: page < totalPages - 1,
       hasPrevPage: page > 0,

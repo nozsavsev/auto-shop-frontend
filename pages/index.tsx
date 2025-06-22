@@ -7,56 +7,104 @@ import CreateUserButton from "@/components/users/CreateUserButton";
 import UserRow from "../components/users/UserRow";
 import Pagination from "../components/Pagination";
 import FillWithUsersButton from "../components/users/FillWithUsersButton";
-import { CarDTO, CreateUpdateUserDTO } from "@/src/API/AutoShopApi";
-import { API } from "@/src/API";
+import { AllCarsDTO, AllUsersDTO, CarDTO, CreateUpdateUserDTO } from "@/src/API/AutoShopApi";
+import { API, ResponseWrapper } from "@/src/API";
+import { FullTableMessage } from "@/components/FullTableMessage";
+import { GetServerSidePropsContext } from "next";
+import { FaUsers } from "react-icons/fa";
+import { useRouter } from "next/router";
+import { SearchBar } from "@/components/SearchBar";
+import { useCars } from "@/src/hooks/useCars";
 
-export default function Users() {
-  const { users, isLoading, error, refresh, pagination, updateUser, deleteUser } = useUsers();
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const [cars, setCars] = useState<CarDTO[]>([]);
-  const [carsLoading, setCarsLoading] = useState(false);
+type UsersPageProps = {
+  initialSearch: string;
+  initialPage: number;
+  initialPageSize: number;
+  initialUsers: ResponseWrapper<AllUsersDTO>;
+  initialCars: ResponseWrapper<AllCarsDTO>;
+  initialCarsPage: number;
+  initialCarsPageSize: number;
+  initialCarsSearch: string;
+};
 
-  const fetchCars = async () => {
-    setCarsLoading(true);
-    const res = await API.Client.Cars.GetCars({ skip: 0, take: 1000 });
-    setCars(res.data?.cars || []);
-    setCarsLoading(false);
-  };
+type CarsPageQuery = {
+  q?: string;
+  s?: number;
+  t?: number;
+  cq?: string;
+  cs?: number;
+  ct?: number;
+};
+
+export default function Users({
+  initialSearch,
+  initialPage,
+  initialPageSize,
+  initialUsers,
+  initialCars,
+  initialCarsPage,
+  initialCarsPageSize,
+  initialCarsSearch,
+}: UsersPageProps) {
+  const router = useRouter();
+  const [search, setSearch] = useState(initialSearch);
+  const { users, isLoading, error, refresh, pagination, updateUser, deleteUser } = useUsers(initialPage, initialPageSize, search, initialUsers);
+
+  const [carsSearch, setCarsSearch] = useState(initialCarsSearch);
+
+  const Cars = useCars({ initialPage: initialCarsPage, initialPageSize: initialCarsPageSize, textMatch: carsSearch, initialData: initialCars });
+
+  const { currentPage, pageSize } = pagination;
 
   useEffect(() => {
-    fetchCars();
-  }, []);
+    if (router.isReady) {
+      router.replace(
+        {
+          pathname: router.pathname,
+          query: {
+            q: search || undefined,
+            s: currentPage || undefined,
+            t: pageSize || undefined,
+            cq: carsSearch || undefined,
+            cs: initialCarsPage || undefined,
+            ct: initialCarsPageSize || undefined,
+          },
+        },
+        undefined,
+        {
+          shallow: true,
+        }
+      );
+    }
+  }, [search, currentPage, pageSize, router.isReady]);
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden p-6 max-h-screen">
-      <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6">
-        <h1 className="text-2xl font-bold">Users</h1>
-        <div className="flex flex-wrap gap-2">
-          <CreateUserButton onSuccess={refresh} />
-          <FillWithUsersButton refresh={refresh} />
-          <button
-            className="bg-white text-black px-2 py-1 rounded-md flex items-center border border-gray-200 cursor-pointer transition-all duration-200 ease-in-out hover:bg-gray-50 hover:border-gray-300"
-            onClick={async () => {
-              setIsRefreshing(true);
-              await refresh();
-              const minAnimationTime = 500;
-              const startTime = Date.now();
-              await refresh();
-              const elapsedTime = Date.now() - startTime;
-              const remainingTime = Math.max(0, minAnimationTime - elapsedTime);
-              setTimeout(() => {
-                setIsRefreshing(false);
-              }, remainingTime);
-            }}
-          >
-            <IoRefreshOutline className={`mr-2 transition-transform duration-300 ease-in-out ${isRefreshing ? "animate-[spin_1s_linear_infinite]" : ""}`} />
-            Refresh
-          </button>
+    <div className="flex flex-col w-full p-6 h-[calc(100vh-4rem)]">
+      <div className="flex flex-col gap-4 mb-6 w-full">
+        <h1
+          onClick={() => {
+            pagination.setPage(0);
+            pagination.setPageSize(10);
+            setSearch("");
+          }}
+          className="text-2xl w-fit font-bold flex items-center gap-2 cursor-pointer"
+        >
+          <FaUsers className="text-2xl" />
+          Manage users
+        </h1>
+
+        <div className="flex flex-wrap justify-between w-full gap-2">
+          <div className="flex gap-2">
+            <CreateUserButton onSuccess={refresh} />
+            <FillWithUsersButton refresh={refresh} />
+          </div>
+          <SearchBar search={search} setSearch={setSearch} />
         </div>
       </div>
-      <div className="flex flex-col flex-1 min-h-0 relative">
-        <div className="flex-1 min-h-0 overflow-auto">
-          <table className="min-w-full bg-white border border-gray-200 rounded-lg">
+
+      <div className="flex flex-col flex-1 min-h-0">
+        <div className="flex-1 overflow-y-auto">
+          <table className="w-full bg-white border border-gray-200 rounded-lg">
             <thead className="bg-white text-gray-500 uppercase text-xs sticky top-0 z-10">
               <tr className="divide-x divide-gray-200">
                 <th className="font-semibold min-w-8 text-right bg-white" />
@@ -71,38 +119,24 @@ export default function Users() {
             </thead>
             <tbody className="divide-y divide-gray-200">
               {error && (
-                <tr>
-                  <td colSpan={80} className="h-96">
-                    <p className="text-red-500 font-bold w-full flex items-center justify-center text-4xl">{error}</p>
-                  </td>
-                </tr>
-              )}
-              {isLoading && (
-                <tr>
-                  <td colSpan={80} className="h-96">
-                    <div className="flex flex-col h-full flex-1 grow items-center justify-center">
-                      <AiOutlineLoading className="text-4xl animate-spin text-black" />
-                      <p className="mt-2 font-semibold text-lg text-gray-600">Loading users...</p>
-                    </div>
-                  </td>
-                </tr>
+                <FullTableMessage>
+                  <p className="text-red-500 font-bold w-full flex items-center justify-center text-4xl">{error}</p>
+                </FullTableMessage>
               )}
               {users.length === 0 && !isLoading && !error && (
-                <tr>
-                  <td colSpan={80} className="h-96">
-                    <div className="flex flex-col h-full flex-1 grow items-center justify-center">
-                      <IoBanOutline className="text-4xl text-neutral-500" />
-                      <p className="text-neutral-800 font-semibold text-lg mt-2">No users found</p>
-                    </div>
-                  </td>
-                </tr>
+                <FullTableMessage>
+                  <IoBanOutline className="text-4xl text-neutral-500" />
+                  <p className="text-neutral-800 font-semibold text-lg mt-2">No users found</p>
+                </FullTableMessage>
               )}
               {users.map((user) => (
                 <UserRow
                   key={user.id}
                   user={user}
-                  cars={cars}
-                  carsLoading={carsLoading}
+                  cars={Cars}
+                  carsTextMatch={carsSearch}
+                  textMatch={search}
+                  setCarsTextMatch={setCarsSearch}
                   updateUser={async (newUser: CreateUpdateUserDTO | null, toastId: Id | null) => {
                     if (newUser) {
                       const result = await updateUser(user.id ?? 0, newUser);
@@ -124,9 +158,42 @@ export default function Users() {
               ))}
             </tbody>
           </table>
-          <Pagination pagination={pagination} />
+        </div>
+
+        <div className="relative bottom-16 flex items-center justify-center h-0">
+          <div className="flex items-center justify-center">
+            <Pagination pagination={pagination} />
+          </div>
         </div>
       </div>
     </div>
   );
+}
+
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+  const { q, s, t } = ctx.query;
+  const initialPage = s ? parseInt(s as string) : 0;
+  const initialPageSize = t ? parseInt(t as string) : 10;
+  const initialSearch = (q as string) || "";
+
+  const users = await API.SSR.Users.SearchUsers({ skip: initialPage * initialPageSize, take: initialPageSize, textMatch: initialSearch });
+
+  const { cq, cs, ct } = ctx.query;
+  const CarsSearch = (cq as string) || "";
+  const CarsPage = cs ? parseInt(cs as string) : 0;
+  const CarsPageSize = ct ? parseInt(ct as string) : 10;
+  const Cars = await API.SSR.Cars.SearchCars({ skip: CarsPage * CarsPageSize, take: CarsPageSize, textMatch: CarsSearch });
+
+  return {
+    props: {
+      initialSearch,
+      initialPage,
+      initialPageSize,
+      initialUsers: users,
+      initialCars: Cars,
+      initialCarsPage: CarsPage,
+      initialCarsPageSize: CarsPageSize,
+      initialCarsSearch: CarsSearch,
+    },
+  };
 }

@@ -6,10 +6,16 @@ import { Dialog } from "@headlessui/react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { CarDTO, CreateUpdateCarDTO } from "@/src/API/AutoShopApi";
+import { Highlight } from "../Highlight";
+import { formatDate } from "@/src/utils/formatDate";
+
+
+
 
 interface CarRowProps {
   car: CarDTO;
   updateCar: (car: CreateUpdateCarDTO | null, toastId: Id | null) => void;
+  textMatch?: string;
 }
 
 const validationSchema = Yup.object().shape({
@@ -17,7 +23,7 @@ const validationSchema = Yup.object().shape({
   model: Yup.string().required("Model is required"),
 });
 
-export default function CarRow({ car, updateCar }: CarRowProps) {
+export default function CarRow({ car, updateCar, textMatch }: CarRowProps) {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   return (
@@ -29,11 +35,11 @@ export default function CarRow({ car, updateCar }: CarRowProps) {
           </button>
         </td>
         <td className="text-center px-1 whitespace-nowrap text-sm text-gray-500">{car.id}</td>
-        <td className="px-3 py-1.5 whitespace-nowrap text-sm text-gray-500">{car.company}</td>
-        <td className="px-3 py-1.5 whitespace-nowrap text-sm text-gray-500">{car.model}</td>
+        <td className="px-3 py-1.5 whitespace-nowrap text-sm text-gray-500"><Highlight text={car.company ?? ""} highlight={textMatch ?? ''} /></td>
+        <td className="px-3 py-1.5 whitespace-nowrap text-sm text-gray-500"><Highlight text={car.model ?? ""} highlight={textMatch ?? ''} /></td>
         <td className="px-3 py-1.5 whitespace-nowrap text-sm text-gray-500">{car.users?.length ?? 0} users</td>
-        <td className="px-3 py-1.5 whitespace-nowrap text-sm text-gray-500">{car.createdAt?.toLocaleString()}</td>
-        <td className="px-3 py-1.5 whitespace-nowrap text-sm text-gray-500">{car.updatedAt?.toLocaleString()}</td>
+        <td className="px-3 py-1.5 whitespace-nowrap text-sm text-gray-500">{car.createdAt ? formatDate(car.createdAt) : ''}</td>
+        <td className="px-3 py-1.5 whitespace-nowrap text-sm text-gray-500">{car.updatedAt ? formatDate(car.updatedAt) : ''}</td>
         <td className="px-3 py-1.5 whitespace-nowrap text-sm text-gray-500">
           <button
             className="text-red-600 hover:text-red-700 cursor-pointer"

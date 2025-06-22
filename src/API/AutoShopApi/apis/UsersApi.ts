@@ -15,14 +15,11 @@
 
 import * as runtime from '../runtime';
 import type {
-  AllCarsDTO,
   AllUsersDTO,
   CreateUpdateUserDTO,
   UserDTO,
 } from '../models/index';
 import {
-    AllCarsDTOFromJSON,
-    AllCarsDTOToJSON,
     AllUsersDTOFromJSON,
     AllUsersDTOToJSON,
     CreateUpdateUserDTOFromJSON,
@@ -220,7 +217,7 @@ export class UsersApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiUsersSearchGetRaw(requestParameters: ApiUsersSearchGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AllCarsDTO>> {
+    async apiUsersSearchGetRaw(requestParameters: ApiUsersSearchGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AllUsersDTO>> {
         const queryParameters: any = {};
 
         if (requestParameters['textMatch'] != null) {
@@ -244,12 +241,12 @@ export class UsersApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => AllCarsDTOFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => AllUsersDTOFromJSON(jsonValue));
     }
 
     /**
      */
-    async apiUsersSearchGet(requestParameters: ApiUsersSearchGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AllCarsDTO> {
+    async apiUsersSearchGet(requestParameters: ApiUsersSearchGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AllUsersDTO> {
         const response = await this.apiUsersSearchGetRaw(requestParameters, initOverrides);
         return await response.value();
     }

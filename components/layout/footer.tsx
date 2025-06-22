@@ -2,19 +2,23 @@ import Link from "next/link";
 import { FaGithub, FaLinkedin } from "react-icons/fa6";
 
 const Footer = () => {
-
   return (
     <footer className="flex w-screen flex-col items-center justify-center bg-white">
-      <div
-        className="relative flex w-full flex-col items-center justify-center pb-20 pt-8"
-        style={{ maxWidth:  1200 }}
-      >
+      <div className="relative flex w-full flex-col items-center justify-center pb-20 pt-8" style={{ maxWidth: 1200 }}>
         <div className="flex flex-col items-center justify-center text-lg opacity-50 sm:flex-row">
           <div className="flex">
-            <Link className="mx-2" href={"/"}>              Home            </Link>
-            <Link className="mx-2" href={"/about"}>              About            </Link>
-            <Link className="mx-2" href={"/cars"}>              Cars            </Link>
-            <Link className="mx-2" href={"/users"}>              Users            </Link>
+            <Link className="mx-2" href={"/"}>
+              Home
+            </Link>
+            <Link className="mx-2" href={"/about"}>
+              About
+            </Link>
+            <Link className="mx-2" href={"/cars"}>
+              Cars
+            </Link>
+            <Link className="mx-2" href={"/"}>
+              Users
+            </Link>
           </div>
           <div className="mx-2 h-10 bg-black sm:w-px" />
 

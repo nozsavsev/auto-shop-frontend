@@ -1,10 +1,11 @@
+import { useEffect } from "react";
 import { IoChevronForward, IoChevronBack } from "react-icons/io5";
 
 interface PaginationProps {
   pagination: {
     currentPage: number;
     pageSize: number;
-    totalUsers: number;
+    totalItems: number;
     totalPages: number;
     hasNextPage: boolean;
     hasPrevPage: boolean;
@@ -14,6 +15,23 @@ interface PaginationProps {
 }
 
 export default function Pagination({ pagination }: PaginationProps) {
+  
+  useEffect(() => {
+    
+    if(![5,10,25,50].includes(pagination.pageSize)) {
+      pagination.setPageSize(5);
+    }
+
+    if(pagination.currentPage >= pagination.totalPages) {
+      pagination.setPage(pagination.totalPages - 1);
+    }
+
+    if(pagination.currentPage < 0) {
+      pagination.setPage(0);
+    }
+
+  }, [pagination.pageSize]);
+
   return (
     <div className="bg-white shrink-0 rounded-lg shadow-lg p-2 flex flex-col sm:flex-row items-center gap-1 sm:gap-2 border border-neutral-300 text-xs sm:text-sm">
       <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">

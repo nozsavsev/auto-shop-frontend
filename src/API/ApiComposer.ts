@@ -3,17 +3,18 @@ import { CarsApi, StatusApi, UsersApi } from './Client';
 import { CarsSSRApi, StatusSSRApi, UsersSSRApi } from './SSR';
 
 const dev = process.env.NODE_ENV !== 'production';
-
+export const SSR_BasePath = dev ? 'http://localhost:5005' : 'http://auto-shop-api:5005';
+export const Client_BasePath = dev ? 'http://localhost:5005' : 'http://auto-shop-api:5005';
 export const GetDefaultConfig = () => {
   return new AutoShopApi.Configuration({
     credentials: 'include',
+    basePath: Client_BasePath,
   });
 };
 
 export type SSRConfigParameters = {
 };
 
-export const SSR_BasePath = dev ? 'http://localhost:5005' : 'http://auto-shop-api:5005';
 
 export const GetSSRDefaultConfig = (params: SSRConfigParameters) => {
   return new AutoShopApi.Configuration({
