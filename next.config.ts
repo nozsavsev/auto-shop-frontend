@@ -1,8 +1,9 @@
 import type { NextConfig } from "next";
-const { withSuperjson } = require("next-superjson");
+// const { withSuperjson } = require("next-superjson");
 const nextConfig: NextConfig = {
   /* config options here */
   reactStrictMode: true,
   output: "standalone",
 };
-module.exports = withSuperjson()(nextConfig);
+// module.exports = withSuperjson()(nextConfig);
+module.exports = nextConfig;

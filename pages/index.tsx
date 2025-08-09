@@ -1,10 +1,10 @@
 import { useUsers } from "@/src/hooks/useUsers";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { AiOutlineLoading } from "react-icons/ai";
 import { IoBanOutline, IoRefreshOutline } from "react-icons/io5";
 import { Id, toast } from "react-toastify";
 import CreateUserButton from "@/components/users/CreateUserButton";
-import UserRow from "../components/users/UserRow";
+import ModernUserRow from "../components/users/ModernUserRow";
 import Pagination from "../components/Pagination";
 import FillWithUsersButton from "../components/users/FillWithUsersButton";
 import { AllCarsDTO, AllUsersDTO, CarDTO, CreateUpdateUserDTO } from "@/src/API/AutoShopApi";
@@ -15,6 +15,9 @@ import { FaUsers } from "react-icons/fa";
 import { useRouter } from "next/router";
 import { SearchBar } from "@/components/SearchBar";
 import { useCars } from "@/src/hooks/useCars";
+import { useSelection } from "@/src/hooks/useSelection";
+import BatchActions from "@/components/BatchActions";
+import SortableHeader, { SortDirection } from "@/components/SortableHeader";
 
 type UsersPageProps = {
   initialSearch: string;
@@ -48,11 +51,60 @@ export default function Users({
 }: UsersPageProps) {
   const router = useRouter();
   const [search, setSearch] = useState(initialSearch);
+  const [sortKey, setSortKey] = useState<string | null>(null);
+  const [sortDirection, setSortDirection] = useState<SortDirection>(null);
+  
   const { users, isLoading, error, refresh, pagination, updateUser, deleteUser } = useUsers(initialPage, initialPageSize, search, initialUsers);
 
   const [carsSearch, setCarsSearch] = useState(initialCarsSearch);
 
   const Cars = useCars({ initialPage: initialCarsPage, initialPageSize: initialCarsPageSize, textMatch: carsSearch, initialData: initialCars });
+
+  // Sort users based on current sort settings
+  const sortedUsers = useMemo(() => {
+    if (!sortKey || !sortDirection) return users;
+    
+    return [...users].sort((a, b) => {
+      let aVal: any = '';
+      let bVal: any = '';
+      
+      switch (sortKey) {
+        case 'name':
+          aVal = a.name?.toLowerCase() || '';
+          bVal = b.name?.toLowerCase() || '';
+          break;
+        case 'email':
+          aVal = a.email?.toLowerCase() || '';
+          bVal = b.email?.toLowerCase() || '';
+          break;
+        case 'car':
+          aVal = a.car ? `${a.car.company} ${a.car.model}`.toLowerCase() : '';
+          bVal = b.car ? `${b.car.company} ${b.car.model}`.toLowerCase() : '';
+          break;
+        case 'createdAt':
+          aVal = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+          bVal = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+          break;
+        case 'updatedAt':
+          aVal = a.updatedAt ? new Date(a.updatedAt).getTime() : 0;
+          bVal = b.updatedAt ? new Date(b.updatedAt).getTime() : 0;
+          break;
+        default:
+          return 0;
+      }
+      
+      if (sortDirection === 'asc') {
+        return aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
+      } else {
+        return aVal > bVal ? -1 : aVal < bVal ? 1 : 0;
+      }
+    });
+  }, [users, sortKey, sortDirection]);
+
+  const selection = useSelection({
+    allItems: users,
+    currentPageItems: sortedUsers
+  });
 
   const { currentPage, pageSize } = pagination;
 
@@ -78,6 +130,22 @@ export default function Users({
     }
   }, [search, currentPage, pageSize, router.isReady]);
 
+  const handleSort = (key: string, direction: SortDirection) => {
+    setSortKey(key);
+    setSortDirection(direction);
+  };
+
+  const handleBatchDelete = async () => {
+    const selectedItems = selection.getSelectedItems();
+    const deletePromises = selectedItems.map(user => 
+      deleteUser(user.id ?? 0)
+    );
+    
+    await Promise.all(deletePromises);
+    selection.clearSelection();
+    refresh();
+  };
+
   return (
     <div className="flex flex-col w-full p-6 h-[calc(100vh-4rem)]">
       <div className="flex flex-col gap-4 mb-6 w-full">
@@ -86,6 +154,7 @@ export default function Users({
             pagination.setPage(0);
             pagination.setPageSize(10);
             setSearch("");
+            selection.clearSelection();
           }}
           className="text-2xl w-fit font-bold flex items-center gap-2 cursor-pointer"
         >
@@ -105,38 +174,72 @@ export default function Users({
       <div className="flex flex-col flex-1 min-h-0">
         <div className="flex-1 overflow-y-auto">
           <table className="w-full bg-white border border-gray-200 rounded-lg">
-            <thead className="bg-white text-gray-500 uppercase text-xs sticky top-0 z-10">
-              <tr className="divide-x divide-gray-200">
-                <th className="font-semibold min-w-8 text-right bg-white" />
-                <th className="font-semibold w-8 text-center bg-white">ID</th>
-                <th className="font-semibold px-3 py-1.5 bg-white">Name</th>
-                <th className="font-semibold px-3 py-1.5 bg-white">Email</th>
-                <th className="font-semibold px-3 py-1.5 bg-white">Car</th>
-                <th className="font-semibold px-3 py-1.5 bg-white">Created At</th>
-                <th className="font-semibold px-3 py-1.5 bg-white">Updated At</th>
-                <th className="font-semibold w-8 px-3 py-1.5 bg-white" />
+            <thead className="bg-white sticky top-0 z-10">
+              <tr className="border-b border-gray-200">
+                <th className="w-12 px-4 py-3 bg-white">
+                  <input
+                    type="checkbox"
+                    checked={selection.isAllSelected()}
+                    ref={(el) => {
+                      if (el) el.indeterminate = selection.isIndeterminate();
+                    }}
+                    onChange={selection.toggleSelectAll}
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                  />
+                </th>
+                <SortableHeader
+                  label="User"
+                  sortKey="name"
+                  currentSortKey={sortKey}
+                  currentDirection={sortDirection}
+                  onSort={handleSort}
+                />
+                <SortableHeader
+                  label="Car"
+                  sortKey="car"
+                  currentSortKey={sortKey}
+                  currentDirection={sortDirection}
+                  onSort={handleSort}
+                />
+                <SortableHeader
+                  label="Last active"
+                  sortKey="updatedAt"
+                  currentSortKey={sortKey}
+                  currentDirection={sortDirection}
+                  onSort={handleSort}
+                />
+                <SortableHeader
+                  label="Date added"
+                  sortKey="createdAt"
+                  currentSortKey={sortKey}
+                  currentDirection={sortDirection}
+                  onSort={handleSort}
+                />
+                <th className="w-12 px-4 py-3 bg-white"></th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
+            <tbody>
               {error && (
                 <FullTableMessage>
                   <p className="text-red-500 font-bold w-full flex items-center justify-center text-4xl">{error}</p>
                 </FullTableMessage>
               )}
-              {users.length === 0 && !isLoading && !error && (
+              {sortedUsers.length === 0 && !isLoading && !error && (
                 <FullTableMessage>
                   <IoBanOutline className="text-4xl text-neutral-500" />
                   <p className="text-neutral-800 font-semibold text-lg mt-2">No users found</p>
                 </FullTableMessage>
               )}
-              {users.map((user) => (
-                <UserRow
+              {sortedUsers.map((user) => (
+                <ModernUserRow
                   key={user.id}
                   user={user}
                   cars={Cars}
                   carsTextMatch={carsSearch}
                   textMatch={search}
                   setCarsTextMatch={setCarsSearch}
+                  isSelected={selection.isSelected(user.id ?? 0)}
+                  onSelectionChange={selection.handleSelection}
                   updateUser={async (newUser: CreateUpdateUserDTO | null, toastId: Id | null) => {
                     if (newUser) {
                       const result = await updateUser(user.id ?? 0, newUser);
@@ -151,6 +254,7 @@ export default function Users({
                         toastId && toast.update(toastId, { render: "Failed to delete user", type: "error", isLoading: false, autoClose: 5000 });
                       } else {
                         toastId && toast.update(toastId, { render: "User deleted", type: "success", isLoading: false, autoClose: 5000 });
+                        selection.clearSelection();
                       }
                     }
                   }}
@@ -166,6 +270,15 @@ export default function Users({
           </div>
         </div>
       </div>
+
+      <BatchActions
+        selectedCount={selection.getSelectedCount()}
+        visibleSelectedCount={selection.getVisibleSelectedCount()}
+        hiddenSelectedCount={selection.getHiddenSelectedCount()}
+        onBatchDelete={handleBatchDelete}
+        onClearSelection={selection.clearSelection}
+        itemType="user"
+      />
     </div>
   );
 }
