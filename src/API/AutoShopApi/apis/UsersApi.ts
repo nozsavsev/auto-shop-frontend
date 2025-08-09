@@ -16,22 +16,23 @@
 import * as runtime from '../runtime';
 import type {
   AllUsersDTO,
-  CreateUpdateUserDTO,
+  CreateUserDTO,
+  UpdateUserDTO,
   UserDTO,
+  UserSortByNullable,
 } from '../models/index';
 import {
     AllUsersDTOFromJSON,
     AllUsersDTOToJSON,
-    CreateUpdateUserDTOFromJSON,
-    CreateUpdateUserDTOToJSON,
+    CreateUserDTOFromJSON,
+    CreateUserDTOToJSON,
+    UpdateUserDTOFromJSON,
+    UpdateUserDTOToJSON,
     UserDTOFromJSON,
     UserDTOToJSON,
+    UserSortByNullableFromJSON,
+    UserSortByNullableToJSON,
 } from '../models/index';
-
-export interface ApiUsersGetRequest {
-    skip?: number;
-    take?: number;
-}
 
 export interface ApiUsersIdDeleteRequest {
     id: number;
@@ -43,55 +44,25 @@ export interface ApiUsersIdGetRequest {
 
 export interface ApiUsersIdPutRequest {
     id: number;
-    createUpdateUserDTO?: CreateUpdateUserDTO;
+    updateUserDTO?: UpdateUserDTO;
 }
 
 export interface ApiUsersPostRequest {
-    createUpdateUserDTO?: CreateUpdateUserDTO;
+    createUserDTO?: CreateUserDTO;
 }
 
 export interface ApiUsersSearchGetRequest {
     textMatch?: string;
     skip?: number;
     take?: number;
+    hasCar?: boolean;
+    sortBy?: UserSortByNullable;
 }
 
 /**
  * 
  */
 export class UsersApi extends runtime.BaseAPI {
-
-    /**
-     */
-    async apiUsersGetRaw(requestParameters: ApiUsersGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AllUsersDTO>> {
-        const queryParameters: any = {};
-
-        if (requestParameters['skip'] != null) {
-            queryParameters['skip'] = requestParameters['skip'];
-        }
-
-        if (requestParameters['take'] != null) {
-            queryParameters['take'] = requestParameters['take'];
-        }
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        const response = await this.request({
-            path: `/api/Users`,
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => AllUsersDTOFromJSON(jsonValue));
-    }
-
-    /**
-     */
-    async apiUsersGet(requestParameters: ApiUsersGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AllUsersDTO> {
-        const response = await this.apiUsersGetRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
 
     /**
      */
@@ -107,8 +78,12 @@ export class UsersApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+
+        let urlPath = `/api/Users/{id}`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/Users/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -137,8 +112,12 @@ export class UsersApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+
+        let urlPath = `/api/Users/{id}`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/Users/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -170,12 +149,16 @@ export class UsersApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
+
+        let urlPath = `/api/Users/{id}`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/Users/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: CreateUpdateUserDTOToJSON(requestParameters['createUpdateUserDTO']),
+            body: UpdateUserDTOToJSON(requestParameters['updateUserDTO']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => UserDTOFromJSON(jsonValue));
@@ -197,12 +180,15 @@ export class UsersApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
+
+        let urlPath = `/api/Users`;
+
         const response = await this.request({
-            path: `/api/Users`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: CreateUpdateUserDTOToJSON(requestParameters['createUpdateUserDTO']),
+            body: CreateUserDTOToJSON(requestParameters['createUserDTO']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => UserDTOFromJSON(jsonValue));
@@ -221,21 +207,32 @@ export class UsersApi extends runtime.BaseAPI {
         const queryParameters: any = {};
 
         if (requestParameters['textMatch'] != null) {
-            queryParameters['textMatch'] = requestParameters['textMatch'];
+            queryParameters['TextMatch'] = requestParameters['textMatch'];
         }
 
         if (requestParameters['skip'] != null) {
-            queryParameters['skip'] = requestParameters['skip'];
+            queryParameters['Skip'] = requestParameters['skip'];
         }
 
         if (requestParameters['take'] != null) {
-            queryParameters['take'] = requestParameters['take'];
+            queryParameters['Take'] = requestParameters['take'];
+        }
+
+        if (requestParameters['hasCar'] != null) {
+            queryParameters['HasCar'] = requestParameters['hasCar'];
+        }
+
+        if (requestParameters['sortBy'] != null) {
+            queryParameters['SortBy'] = requestParameters['sortBy'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+
+        let urlPath = `/api/Users/search`;
+
         const response = await this.request({
-            path: `/api/Users/search`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,

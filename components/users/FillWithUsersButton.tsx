@@ -23,7 +23,7 @@ export default function FillWithUsersButton({ refresh }: FillWithUsersButtonProp
         }
         for (let i = 0; i < total; i++) {
           const user = randomUser();
-          await API.Client.Users.CreateUser({ createUpdateUserDTO: user });
+          await API.Client.Users.CreateUser({ createUserDTO: user });
           created++;
           const percent = Math.min(100, Math.round((created / total) * 100));
           toast.update(toastId, { render: `Filling with 1000 users... ${percent}%`, progress: percent / 100 });

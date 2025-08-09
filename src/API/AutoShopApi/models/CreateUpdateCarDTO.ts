@@ -24,19 +24,21 @@ export interface CreateUpdateCarDTO {
      * @type {string}
      * @memberof CreateUpdateCarDTO
      */
-    company?: string | null;
+    company: string;
     /**
      * 
      * @type {string}
      * @memberof CreateUpdateCarDTO
      */
-    model?: string | null;
+    model: string;
 }
 
 /**
  * Check if a given object implements the CreateUpdateCarDTO interface.
  */
 export function instanceOfCreateUpdateCarDTO(value: object): value is CreateUpdateCarDTO {
+    if (!('company' in value) || value['company'] === undefined) return false;
+    if (!('model' in value) || value['model'] === undefined) return false;
     return true;
 }
 
@@ -50,8 +52,8 @@ export function CreateUpdateCarDTOFromJSONTyped(json: any, ignoreDiscriminator: 
     }
     return {
         
-        'company': json['company'] == null ? undefined : json['company'],
-        'model': json['model'] == null ? undefined : json['model'],
+        'company': json['company'],
+        'model': json['model'],
     };
 }
 

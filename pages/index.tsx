@@ -7,7 +7,7 @@ import CreateUserButton from "@/components/users/CreateUserButton";
 import UserRow from "../components/users/UserRow";
 import Pagination from "../components/Pagination";
 import FillWithUsersButton from "../components/users/FillWithUsersButton";
-import { AllCarsDTO, AllUsersDTO, CarDTO, CreateUpdateUserDTO } from "@/src/API/AutoShopApi";
+import { AllCarsDTO, AllUsersDTO, UpdateUserDTO, } from "@/src/API/AutoShopApi";
 import { API, ResponseWrapper } from "@/src/API";
 import { FullTableMessage } from "@/components/FullTableMessage";
 import { GetServerSidePropsContext } from "next";
@@ -81,17 +81,23 @@ export default function Users({
   return (
     <div className="flex flex-col w-full p-6 h-[calc(100vh-4rem)]">
       <div className="flex flex-col gap-4 mb-6 w-full">
-        <h1
-          onClick={() => {
-            pagination.setPage(0);
-            pagination.setPageSize(10);
-            setSearch("");
-          }}
-          className="text-2xl w-fit font-bold flex items-center gap-2 cursor-pointer"
-        >
-          <FaUsers className="text-2xl" />
-          Manage users
-        </h1>
+        <div>
+
+          <h1
+            onClick={() => {
+              pagination.setPage(0);
+              pagination.setPageSize(10);
+              setSearch("");
+            }}
+            className="text-2xl w-fit font-bold flex items-center gap-2 cursor-pointer"
+          >
+            <FaUsers className="text-2xl" />
+            User managment
+          </h1>
+          <p className="text-sm text-gray-500">
+            Here you can manage users and their car assignments.
+          </p>
+        </div>
 
         <div className="flex flex-wrap justify-between w-full gap-2">
           <div className="flex gap-2">
@@ -104,17 +110,15 @@ export default function Users({
 
       <div className="flex flex-col flex-1 min-h-0">
         <div className="flex-1 overflow-y-auto">
-          <table className="w-full bg-white border border-gray-200 rounded-lg">
+          <table className="w-full bg-white rounded-lg">
             <thead className="bg-white text-gray-500 uppercase text-xs sticky top-0 z-10">
-              <tr className="divide-x divide-gray-200">
-                <th className="font-semibold min-w-8 text-right bg-white" />
-                <th className="font-semibold w-8 text-center bg-white">ID</th>
-                <th className="font-semibold px-3 py-1.5 bg-white">Name</th>
-                <th className="font-semibold px-3 py-1.5 bg-white">Email</th>
-                <th className="font-semibold px-3 py-1.5 bg-white">Car</th>
-                <th className="font-semibold px-3 py-1.5 bg-white">Created At</th>
-                <th className="font-semibold px-3 py-1.5 bg-white">Updated At</th>
-                <th className="font-semibold w-8 px-3 py-1.5 bg-white" />
+              <tr className="text-left">
+                <th className="font-semibold px-3 py-3 text-center" ><input type="checkbox" className="w-4 h-4" /></th>
+                <th className="font-semibold px-3 py-1.5">User name</th>
+                <th className="font-semibold px-3 py-1.5">Car</th>
+                <th className="font-semibold px-3 py-1.5">Updated</th>
+                <th className="font-semibold px-3 py-1.5">Created</th>
+                <th className="font-semibold w-8 px-3 py-1.5" />
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
@@ -137,7 +141,7 @@ export default function Users({
                   carsTextMatch={carsSearch}
                   textMatch={search}
                   setCarsTextMatch={setCarsSearch}
-                  updateUser={async (newUser: CreateUpdateUserDTO | null, toastId: Id | null) => {
+                  updateUser={async (newUser: UpdateUserDTO | null, toastId: Id | null) => {
                     if (newUser) {
                       const result = await updateUser(user.id ?? 0, newUser);
                       if (result.error) {
@@ -166,7 +170,7 @@ export default function Users({
           </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 }
 

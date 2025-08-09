@@ -8,20 +8,37 @@ paths:
       tags:
         - Cars
       parameters:
-        - name: textMatch
+        - name: TextMatch
           in: query
           schema:
+            maxLength: 100
+            minLength: 0
             type: string
-        - name: skip
+        - name: Skip
           in: query
           schema:
+            maximum: 2147483647
+            minimum: 0
             type: integer
             format: int32
-        - name: take
+        - name: Take
           in: query
           schema:
+            maximum: 100
+            minimum: 1
             type: integer
             format: int32
+        - name: HasAtLeastUsers
+          in: query
+          schema:
+            maximum: 2147483647
+            minimum: 0
+            type: integer
+            format: int32
+        - name: SortBy
+          in: query
+          schema:
+            $ref: '#/components/schemas/CarSortByNullable'
       responses:
         '200':
           description: OK
@@ -35,61 +52,6 @@ paths:
             text/json:
               schema:
                 $ref: '#/components/schemas/AllCarsDTO'
-  /api/Cars:
-    get:
-      tags:
-        - Cars
-      parameters:
-        - name: skip
-          in: query
-          schema:
-            type: integer
-            format: int32
-        - name: take
-          in: query
-          schema:
-            type: integer
-            format: int32
-      responses:
-        '200':
-          description: OK
-          content:
-            text/plain:
-              schema:
-                $ref: '#/components/schemas/AllCarsDTO'
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AllCarsDTO'
-            text/json:
-              schema:
-                $ref: '#/components/schemas/AllCarsDTO'
-    post:
-      tags:
-        - Cars
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateUpdateCarDTO'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/CreateUpdateCarDTO'
-          application/*+json:
-            schema:
-              $ref: '#/components/schemas/CreateUpdateCarDTO'
-      responses:
-        '200':
-          description: OK
-          content:
-            text/plain:
-              schema:
-                $ref: '#/components/schemas/CarDTO'
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CarDTO'
-            text/json:
-              schema:
-                $ref: '#/components/schemas/CarDTO'
   '/api/Cars/{id}':
     get:
       tags:
@@ -161,6 +123,34 @@ paths:
       responses:
         '200':
           description: OK
+  /api/Cars:
+    post:
+      tags:
+        - Cars
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUpdateCarDTO'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CreateUpdateCarDTO'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CreateUpdateCarDTO'
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/CarDTO'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CarDTO'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/CarDTO'
   /api/Status:
     get:
       tags:
@@ -168,25 +158,49 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            text/plain:
+              schema:
+                type: boolean
+            application/json:
+              schema:
+                type: boolean
+            text/json:
+              schema:
+                type: boolean
   /api/Users/search:
     get:
       tags:
         - Users
       parameters:
-        - name: textMatch
+        - name: TextMatch
           in: query
           schema:
+            maxLength: 100
+            minLength: 0
             type: string
-        - name: skip
+        - name: Skip
           in: query
           schema:
+            maximum: 2147483647
+            minimum: 0
             type: integer
             format: int32
-        - name: take
+        - name: Take
           in: query
           schema:
+            maximum: 100
+            minimum: 1
             type: integer
             format: int32
+        - name: HasCar
+          in: query
+          schema:
+            type: boolean
+        - name: SortBy
+          in: query
+          schema:
+            $ref: '#/components/schemas/UserSortByNullable'
       responses:
         '200':
           description: OK
@@ -200,61 +214,6 @@ paths:
             text/json:
               schema:
                 $ref: '#/components/schemas/AllUsersDTO'
-  /api/Users:
-    get:
-      tags:
-        - Users
-      parameters:
-        - name: skip
-          in: query
-          schema:
-            type: integer
-            format: int32
-        - name: take
-          in: query
-          schema:
-            type: integer
-            format: int32
-      responses:
-        '200':
-          description: OK
-          content:
-            text/plain:
-              schema:
-                $ref: '#/components/schemas/AllUsersDTO'
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AllUsersDTO'
-            text/json:
-              schema:
-                $ref: '#/components/schemas/AllUsersDTO'
-    post:
-      tags:
-        - Users
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateUpdateUserDTO'
-          text/json:
-            schema:
-              $ref: '#/components/schemas/CreateUpdateUserDTO'
-          application/*+json:
-            schema:
-              $ref: '#/components/schemas/CreateUpdateUserDTO'
-      responses:
-        '200':
-          description: OK
-          content:
-            text/plain:
-              schema:
-                $ref: '#/components/schemas/UserDTO'
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UserDTO'
-            text/json:
-              schema:
-                $ref: '#/components/schemas/UserDTO'
   '/api/Users/{id}':
     get:
       tags:
@@ -293,13 +252,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateUpdateUserDTO'
+              $ref: '#/components/schemas/UpdateUserDTO'
           text/json:
             schema:
-              $ref: '#/components/schemas/CreateUpdateUserDTO'
+              $ref: '#/components/schemas/UpdateUserDTO'
           application/*+json:
             schema:
-              $ref: '#/components/schemas/CreateUpdateUserDTO'
+              $ref: '#/components/schemas/UpdateUserDTO'
       responses:
         '200':
           description: OK
@@ -326,6 +285,34 @@ paths:
       responses:
         '200':
           description: OK
+  /api/Users:
+    post:
+      tags:
+        - Users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserDTO'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserDTO'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CreateUserDTO'
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/UserDTO'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDTO'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/UserDTO'
 components:
   schemas:
     AllCarsDTO:
@@ -389,26 +376,77 @@ components:
             $ref: '#/components/schemas/UserBasicDTO'
           nullable: true
       additionalProperties: false
+    CarSortByNullable:
+      enum:
+        - CompanyAsc
+        - CompanyDesc
+        - ModelAsc
+        - ModelDesc
+        - CreatedAtAsc
+        - CreatedAtDesc
+        - UpdatedAtAsc
+        - UpdatedAtDesc
+        - 
+      type: string
+      nullable: true
     CreateUpdateCarDTO:
+      required:
+        - company
+        - model
       type: object
       properties:
         company:
+          maxLength: 100
+          minLength: 1
           type: string
-          nullable: true
         model:
+          maxLength: 100
+          minLength: 1
           type: string
-          nullable: true
       additionalProperties: false
-    CreateUpdateUserDTO:
+    CreateUserDTO:
+      required:
+        - email
+        - name
+        - password
       type: object
       properties:
         name:
+          maxLength: 100
+          minLength: 1
           type: string
-          nullable: true
         email:
+          maxLength: 100
+          minLength: 0
           type: string
-          nullable: true
+          format: email
         password:
+          maxLength: 100
+          minLength: 6
+          type: string
+        carId:
+          type: integer
+          format: int32
+          nullable: true
+      additionalProperties: false
+    UpdateUserDTO:
+      required:
+        - email
+        - name
+      type: object
+      properties:
+        name:
+          maxLength: 100
+          minLength: 1
+          type: string
+        email:
+          maxLength: 100
+          minLength: 0
+          type: string
+          format: email
+        password:
+          maxLength: 100
+          minLength: 6
           type: string
           nullable: true
         carId:
@@ -450,3 +488,14 @@ components:
         car:
           $ref: '#/components/schemas/CarBasicDTO'
       additionalProperties: false
+    UserSortByNullable:
+      enum:
+        - NameAsc
+        - NameDesc
+        - CreatedAtAsc
+        - CreatedAtDesc
+        - UpdatedAtAsc
+        - UpdatedAtDesc
+        - 
+      type: string
+      nullable: true

@@ -68,18 +68,17 @@ export default function UserRow({ user, updateUser, cars, textMatch, carsTextMat
 
   return (
     <>
-      <tr className="divide-x divide-gray-200">
+      <tr className="">
         <td className="w-8 text-center whitespace-nowrap text-sm text-gray-500">
-          <button onClick={() => setIsEditModalOpen(true)} className="text-blue-600 hover:text-blue-700 cursor-pointer" title="Edit user">
-            <IoPencil className="w-4 h-4" />
-          </button>
+          <input type="checkbox" className="w-4 h-4" />
         </td>
-        <td className="text-center px-1 whitespace-nowrap text-sm text-gray-500">{user.id}</td>
-        <td className="px-3 py-1.5 whitespace-nowrap text-sm text-gray-500">
-          <Highlight text={user.name ?? ""} highlight={textMatch ?? ""} />
-        </td>
-        <td className="px-3 py-1.5 whitespace-nowrap text-sm text-gray-500">
-          <Highlight text={user.email ?? ""} highlight={textMatch ?? ""} />
+        <td className="px-3 py-1.5 whitespace-nowrap text-sm flex flex-col ">
+          <span className="text-neutral-800 font-semibold text-lg">
+            <Highlight text={user.name ?? ""} highlight={textMatch ?? ""} />
+          </span>
+          <span className="text-gray-500 text-sm">
+            <Highlight text={user.email ?? ""} highlight={textMatch ?? ""} />
+          </span>
         </td>
         <td className="px-3 py-1.5 w-fit whitespace-nowrap text-sm text-gray-500">
           {user.car ? (
@@ -327,9 +326,8 @@ function CarSelect({
                           }
                         }}
                         disabled={!cars.pagination.hasPrevPage}
-                        className={`p-1 rounded ${
-                          cars.pagination.hasPrevPage ? "text-gray-600 hover:bg-gray-200" : "text-gray-300 cursor-not-allowed"
-                        }`}
+                        className={`p-1 rounded ${cars.pagination.hasPrevPage ? "text-gray-600 hover:bg-gray-200" : "text-gray-300 cursor-not-allowed"
+                          }`}
                       >
                         <IoChevronBackOutline className="h-4 w-4" />
                       </button>
@@ -342,9 +340,8 @@ function CarSelect({
                           }
                         }}
                         disabled={!cars.pagination.hasNextPage}
-                        className={`p-1 rounded ${
-                          cars.pagination.hasNextPage ? "text-gray-600 hover:bg-gray-200" : "text-gray-300 cursor-not-allowed"
-                        }`}
+                        className={`p-1 rounded ${cars.pagination.hasNextPage ? "text-gray-600 hover:bg-gray-200" : "text-gray-300 cursor-not-allowed"
+                          }`}
                       >
                         <IoChevronForwardOutline className="h-4 w-4" />
                       </button>

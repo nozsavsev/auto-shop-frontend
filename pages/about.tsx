@@ -17,7 +17,7 @@ import {
 } from "react-icons/fa";
 import { SiTypescript, SiTailwindcss, SiNextdotjs, SiSwr, SiFormik, SiPostgresql, SiDotnet } from "react-icons/si";
 import { IoStatsChart } from "react-icons/io5";
-
+import Image from "next/image";
 export default function About() {
   const features = [
     {
@@ -78,13 +78,10 @@ export default function About() {
       <div className="relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="text-center">
-            <div className="flex justify-center mb-6">
-              <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-4 rounded-full">
-                <FaCar className="w-12 h-12 text-white" />
-              </div>
-            </div>
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-              Auto Shop Management System
+            <h1 className="text-4xl md:text-6xl font-bold flex items-center justify-center text-gray-900 mb-6">
+            <Image src="/logo.svg" alt="logo" width={468.78} height={67.23} className="h-10 w-fit object-contain" />
+
+
             </h1>
             <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
               A modern, full-stack web application for managing automotive businesses, 

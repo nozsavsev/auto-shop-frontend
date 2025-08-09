@@ -17,6 +17,7 @@ import * as runtime from '../runtime';
 import type {
   AllCarsDTO,
   CarDTO,
+  CarSortByNullable,
   CreateUpdateCarDTO,
 } from '../models/index';
 import {
@@ -24,14 +25,11 @@ import {
     AllCarsDTOToJSON,
     CarDTOFromJSON,
     CarDTOToJSON,
+    CarSortByNullableFromJSON,
+    CarSortByNullableToJSON,
     CreateUpdateCarDTOFromJSON,
     CreateUpdateCarDTOToJSON,
 } from '../models/index';
-
-export interface ApiCarsGetRequest {
-    skip?: number;
-    take?: number;
-}
 
 export interface ApiCarsIdDeleteRequest {
     id: number;
@@ -54,44 +52,14 @@ export interface ApiCarsSearchGetRequest {
     textMatch?: string;
     skip?: number;
     take?: number;
+    hasAtLeastUsers?: number;
+    sortBy?: CarSortByNullable;
 }
 
 /**
  * 
  */
 export class CarsApi extends runtime.BaseAPI {
-
-    /**
-     */
-    async apiCarsGetRaw(requestParameters: ApiCarsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AllCarsDTO>> {
-        const queryParameters: any = {};
-
-        if (requestParameters['skip'] != null) {
-            queryParameters['skip'] = requestParameters['skip'];
-        }
-
-        if (requestParameters['take'] != null) {
-            queryParameters['take'] = requestParameters['take'];
-        }
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        const response = await this.request({
-            path: `/api/Cars`,
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => AllCarsDTOFromJSON(jsonValue));
-    }
-
-    /**
-     */
-    async apiCarsGet(requestParameters: ApiCarsGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AllCarsDTO> {
-        const response = await this.apiCarsGetRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
 
     /**
      */
@@ -107,8 +75,12 @@ export class CarsApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+
+        let urlPath = `/api/Cars/{id}`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/Cars/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -137,8 +109,12 @@ export class CarsApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+
+        let urlPath = `/api/Cars/{id}`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/Cars/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -170,8 +146,12 @@ export class CarsApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
+
+        let urlPath = `/api/Cars/{id}`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/Cars/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -197,8 +177,11 @@ export class CarsApi extends runtime.BaseAPI {
 
         headerParameters['Content-Type'] = 'application/json';
 
+
+        let urlPath = `/api/Cars`;
+
         const response = await this.request({
-            path: `/api/Cars`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -221,21 +204,32 @@ export class CarsApi extends runtime.BaseAPI {
         const queryParameters: any = {};
 
         if (requestParameters['textMatch'] != null) {
-            queryParameters['textMatch'] = requestParameters['textMatch'];
+            queryParameters['TextMatch'] = requestParameters['textMatch'];
         }
 
         if (requestParameters['skip'] != null) {
-            queryParameters['skip'] = requestParameters['skip'];
+            queryParameters['Skip'] = requestParameters['skip'];
         }
 
         if (requestParameters['take'] != null) {
-            queryParameters['take'] = requestParameters['take'];
+            queryParameters['Take'] = requestParameters['take'];
+        }
+
+        if (requestParameters['hasAtLeastUsers'] != null) {
+            queryParameters['HasAtLeastUsers'] = requestParameters['hasAtLeastUsers'];
+        }
+
+        if (requestParameters['sortBy'] != null) {
+            queryParameters['SortBy'] = requestParameters['sortBy'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+
+        let urlPath = `/api/Cars/search`;
+
         const response = await this.request({
-            path: `/api/Cars/search`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,

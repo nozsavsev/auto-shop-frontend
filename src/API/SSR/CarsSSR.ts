@@ -6,12 +6,6 @@ export class CarsSSRApi {
     return new AutoShopApi.CarsApi(GetSSRDefaultConfig(config));
   }
 
-  public async GetCars(params: AutoShopApi.ApiCarsGetRequest & SSRConfigParameters) {
-    const api = this.getCurrentApi(params);
-    const method = api.apiCarsGet;
-    return await ExecuteApiRequest<typeof method>(method.bind(api), { ...params });
-  }
-
   public async GetCarById(params: AutoShopApi.ApiCarsIdGetRequest & SSRConfigParameters) {
     const api = this.getCurrentApi(params);
     const method = api.apiCarsIdGet;

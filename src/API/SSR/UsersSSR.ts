@@ -6,25 +6,23 @@ export class UsersSSRApi {
     return new AutoShopApi.UsersApi(GetSSRDefaultConfig(config));
   }
 
-  public async GetUsers(params: AutoShopApi.ApiUsersGetRequest & SSRConfigParameters) {
-    const api = this.getCurrentApi(params);
-    const method = api.apiUsersGet;
-    return await ExecuteApiRequest<typeof method>(method.bind(api), { ...params });
-  }
-
   public async GetUserById(params: AutoShopApi.ApiUsersIdGetRequest & SSRConfigParameters) {
     const api = this.getCurrentApi(params);
     const method = api.apiUsersIdGet;
     return await ExecuteApiRequest<typeof method>(method.bind(api), { ...params });
   }
 
-  public async CreateUser(params: AutoShopApi.ApiUsersPostRequest & SSRConfigParameters) {
+  public async CreateUser(
+    params: (AutoShopApi.ApiUsersPostRequest & SSRConfigParameters )
+  ) {
     const api = this.getCurrentApi(params);
     const method = api.apiUsersPost;
     return await ExecuteApiRequest<typeof method>(method.bind(api), { ...params });
   }
 
-  public async UpdateUser(params: AutoShopApi.ApiUsersIdPutRequest & SSRConfigParameters) {
+  public async UpdateUser(
+    params: (AutoShopApi.ApiUsersIdPutRequest & SSRConfigParameters )
+  ) {
     const api = this.getCurrentApi(params);
     const method = api.apiUsersIdPut;
     return await ExecuteApiRequest<typeof method>(method.bind(api), { ...params });

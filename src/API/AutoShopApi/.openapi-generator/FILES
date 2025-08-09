@@ -7,9 +7,12 @@ models/AllCarsDTO.ts
 models/AllUsersDTO.ts
 models/CarBasicDTO.ts
 models/CarDTO.ts
+models/CarSortByNullable.ts
 models/CreateUpdateCarDTO.ts
-models/CreateUpdateUserDTO.ts
+models/CreateUserDTO.ts
+models/UpdateUserDTO.ts
 models/UserBasicDTO.ts
 models/UserDTO.ts
+models/UserSortByNullable.ts
 models/index.ts
 runtime.ts
