@@ -1,16 +1,29 @@
 import useSWR from "swr";
 import React, { useEffect, useState } from "react";
 import { API, ResponseWrapper } from "../API";
-import { AllUsersDTO, CreateUpdateUserDTO } from "../API/AutoShopApi/models";
+import { AllUsersDTO, UpdateUserDTO, UserSortByNullable } from "../API/AutoShopApi/models";
 import { ApiUsersIdPutRequest } from "../API/AutoShopApi";
 
-export function useUsers(initialPage: number = 0, initialPageSize: number = 10, textMatch: string | undefined = undefined, initialData: ResponseWrapper<AllUsersDTO> | undefined = undefined) {
+export function useUsers(
+  initialPage: number = 0,
+  initialPageSize: number = 10,
+  textMatch: string | undefined = undefined,
+  initialData: ResponseWrapper<AllUsersDTO> | undefined = undefined,
+  initialSortBy: UserSortByNullable | undefined = undefined
+) {
   const [page, setPage] = useState(initialPage);
   const [pageSize, setPageSize] = useState(initialPageSize);
+  const [sortBy, setSortBy] = useState<UserSortByNullable | undefined>(initialSortBy);
 
   const { data, error, isLoading, mutate } = useSWR<ResponseWrapper<AllUsersDTO>>(
-    [page, pageSize, textMatch],
-    async () => await API.Client.Users.SearchUsers({ skip: page * pageSize, take: pageSize, textMatch: textMatch }),
+    [page, pageSize, textMatch, sortBy],
+    async () =>
+      await API.Client.Users.SearchUsers({
+        skip: page * pageSize,
+        take: pageSize,
+        textMatch: textMatch,
+        sortBy,
+      }),
     {
       fallbackData: initialData,
       revalidateOnFocus: true,
@@ -24,10 +37,10 @@ export function useUsers(initialPage: number = 0, initialPageSize: number = 10, 
   
   useEffect(() => {
     mutate();
-  }, [textMatch]);
+  }, [textMatch, sortBy]);
 
-  const updateUser = async (userId: number, updatedUser: CreateUpdateUserDTO) => {
-    const response = await API.Client.Users.UpdateUser({ id: userId, createUpdateUserDTO: updatedUser });
+  const updateUser = async (userId: number, updatedUser: UpdateUserDTO) => {
+    const response = await API.Client.Users.UpdateUser({ id: userId, updateUserDTO: updatedUser });
 
     if (!response.error && response.data) {
       await mutate(
@@ -87,6 +100,10 @@ export function useUsers(initialPage: number = 0, initialPageSize: number = 10, 
     refresh: mutate,
     updateUser,
     deleteUser,
+    sorting: {
+      sortBy,
+      setSortBy,
+    },
     pagination: {
       currentPage: page,
       pageSize: pageSize,

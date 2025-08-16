@@ -20,6 +20,8 @@
 export const UserSortByNullable = {
     NameAsc: 'NameAsc',
     NameDesc: 'NameDesc',
+    EmailAsc: 'EmailAsc',
+    EmailDesc: 'EmailDesc',
     CreatedAtAsc: 'CreatedAtAsc',
     CreatedAtDesc: 'CreatedAtDesc',
     UpdatedAtAsc: 'UpdatedAtAsc',

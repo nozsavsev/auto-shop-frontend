@@ -31,6 +31,10 @@ import {
     CreateUpdateCarDTOToJSON,
 } from '../models/index';
 
+export interface ApiCarsBulkPostRequest {
+    createUpdateCarDTO?: Array<CreateUpdateCarDTO>;
+}
+
 export interface ApiCarsIdDeleteRequest {
     id: number;
 }
@@ -52,7 +56,6 @@ export interface ApiCarsSearchGetRequest {
     textMatch?: string;
     skip?: number;
     take?: number;
-    hasAtLeastUsers?: number;
     sortBy?: CarSortByNullable;
 }
 
@@ -60,6 +63,36 @@ export interface ApiCarsSearchGetRequest {
  * 
  */
 export class CarsApi extends runtime.BaseAPI {
+
+    /**
+     */
+    async apiCarsBulkPostRaw(requestParameters: ApiCarsBulkPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<CarDTO>>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+
+        let urlPath = `/api/Cars/bulk`;
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: requestParameters['createUpdateCarDTO']!.map(CreateUpdateCarDTOToJSON),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(CarDTOFromJSON));
+    }
+
+    /**
+     */
+    async apiCarsBulkPost(requestParameters: ApiCarsBulkPostRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<CarDTO>> {
+        const response = await this.apiCarsBulkPostRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
 
     /**
      */
@@ -213,10 +246,6 @@ export class CarsApi extends runtime.BaseAPI {
 
         if (requestParameters['take'] != null) {
             queryParameters['Take'] = requestParameters['take'];
-        }
-
-        if (requestParameters['hasAtLeastUsers'] != null) {
-            queryParameters['HasAtLeastUsers'] = requestParameters['hasAtLeastUsers'];
         }
 
         if (requestParameters['sortBy'] != null) {

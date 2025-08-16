@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import useSWR, { KeyedMutator } from "swr";
 import { ResponseWrapper, API } from "../API";
-import { AllCarsDTO, CarDTO, CreateUpdateCarDTO } from "../API/AutoShopApi";
+import { AllCarsDTO, CarDTO, CreateUpdateCarDTO, CarSortByNullable } from "../API/AutoShopApi";
 
 export type useCarsParams = {
   initialPage: number;
   initialPageSize: number;
   textMatch: string | undefined;
   initialData: ResponseWrapper<AllCarsDTO> | undefined;
+  initialSortBy?: CarSortByNullable | undefined;
 };
 
 export type useCarsType = {
@@ -18,6 +19,10 @@ export type useCarsType = {
   refresh: KeyedMutator<ResponseWrapper<AllCarsDTO>>;
   updateCar: (carId: number, updatedCar: CreateUpdateCarDTO) => Promise<ResponseWrapper<CarDTO>>;
   deleteCar: (carId: number) => Promise<ResponseWrapper<void>>;
+  sorting: {
+    sortBy: CarSortByNullable | undefined;
+    setSortBy: (value: CarSortByNullable | undefined) => void;
+  };
   pagination: {
     currentPage: number;
     pageSize: number;
@@ -30,13 +35,20 @@ export type useCarsType = {
   };
 };
 
-export function useCars({ initialPage, initialPageSize, textMatch, initialData }: useCarsParams): useCarsType {
+export function useCars({ initialPage, initialPageSize, textMatch, initialData, initialSortBy }: useCarsParams): useCarsType {
   const [page, setPage] = useState(initialPage);
   const [pageSize, setPageSize] = useState(initialPageSize);
+  const [sortBy, setSortBy] = useState<CarSortByNullable | undefined>(initialSortBy);
 
   const { data, error, isLoading, mutate } = useSWR<ResponseWrapper<AllCarsDTO>>(
-    [page, pageSize, textMatch, initialData],
-    async () => await API.Client.Cars.SearchCars({ skip: page * pageSize, take: pageSize, textMatch: textMatch }),
+    [page, pageSize, textMatch, (initialData as any), sortBy],
+    async () =>
+      await API.Client.Cars.SearchCars({
+        skip: page * pageSize,
+        take: pageSize,
+        textMatch: textMatch,
+        sortBy: sortBy,
+      }),
     {
       fallbackData: initialData,
       revalidateOnMount: false,
@@ -50,7 +62,7 @@ export function useCars({ initialPage, initialPageSize, textMatch, initialData }
 
   useEffect(() => {
     mutate();
-  }, [textMatch]);
+  }, [textMatch, sortBy]);
 
   const updateCar = async (carId: number, updatedCar: CreateUpdateCarDTO) => {
     const response = await API.Client.Cars.UpdateCar({ id: carId, createUpdateCarDTO: updatedCar });
@@ -106,6 +118,10 @@ export function useCars({ initialPage, initialPageSize, textMatch, initialData }
     refresh: mutate,
     updateCar,
     deleteCar,
+    sorting: {
+      sortBy,
+      setSortBy,
+    },
     pagination: {
       currentPage: page,
       pageSize: pageSize,

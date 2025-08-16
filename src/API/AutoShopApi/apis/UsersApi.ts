@@ -34,6 +34,10 @@ import {
     UserSortByNullableToJSON,
 } from '../models/index';
 
+export interface ApiUsersBulkPostRequest {
+    createUserDTO?: Array<CreateUserDTO>;
+}
+
 export interface ApiUsersIdDeleteRequest {
     id: number;
 }
@@ -55,7 +59,6 @@ export interface ApiUsersSearchGetRequest {
     textMatch?: string;
     skip?: number;
     take?: number;
-    hasCar?: boolean;
     sortBy?: UserSortByNullable;
 }
 
@@ -63,6 +66,36 @@ export interface ApiUsersSearchGetRequest {
  * 
  */
 export class UsersApi extends runtime.BaseAPI {
+
+    /**
+     */
+    async apiUsersBulkPostRaw(requestParameters: ApiUsersBulkPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<UserDTO>>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+
+        let urlPath = `/api/Users/bulk`;
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: requestParameters['createUserDTO']!.map(CreateUserDTOToJSON),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(UserDTOFromJSON));
+    }
+
+    /**
+     */
+    async apiUsersBulkPost(requestParameters: ApiUsersBulkPostRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<UserDTO>> {
+        const response = await this.apiUsersBulkPostRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
 
     /**
      */
@@ -216,10 +249,6 @@ export class UsersApi extends runtime.BaseAPI {
 
         if (requestParameters['take'] != null) {
             queryParameters['Take'] = requestParameters['take'];
-        }
-
-        if (requestParameters['hasCar'] != null) {
-            queryParameters['HasCar'] = requestParameters['hasCar'];
         }
 
         if (requestParameters['sortBy'] != null) {

@@ -17,7 +17,7 @@ export default function EditCarModal({ open, onClose, car, onSave, loading }: Ed
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    await onSave(formData);
+    await onSave({ company: formData.company ?? '', model: formData.model ?? '' });
     setIsSubmitting(false);
     onClose();
   };

@@ -35,4 +35,10 @@ export class UsersApi {
     const method = api.apiUsersSearchGet;
     return await ExecuteApiRequest<typeof method>(method.bind(api), { ...params });
   }
+
+  public async BulkCreateUsers(params: AutoShopApi.ApiUsersBulkPostRequest = {}) {
+    const api = this.getCurrentApi();
+    const method = api.apiUsersBulkPost;
+    return await ExecuteApiRequest<typeof method>(method.bind(api), { ...params });
+  }
 }

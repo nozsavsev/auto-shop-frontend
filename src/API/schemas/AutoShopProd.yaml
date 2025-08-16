@@ -28,13 +28,6 @@ paths:
             minimum: 1
             type: integer
             format: int32
-        - name: HasAtLeastUsers
-          in: query
-          schema:
-            maximum: 2147483647
-            minimum: 0
-            type: integer
-            format: int32
         - name: SortBy
           in: query
           schema:
@@ -151,6 +144,46 @@ paths:
             text/json:
               schema:
                 $ref: '#/components/schemas/CarDTO'
+  /api/Cars/bulk:
+    post:
+      tags:
+        - Cars
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/CreateUpdateCarDTO'
+          text/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/CreateUpdateCarDTO'
+          application/*+json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/CreateUpdateCarDTO'
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CarDTO'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CarDTO'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CarDTO'
   /api/Status:
     get:
       tags:
@@ -193,10 +226,6 @@ paths:
             minimum: 1
             type: integer
             format: int32
-        - name: HasCar
-          in: query
-          schema:
-            type: boolean
         - name: SortBy
           in: query
           schema:
@@ -313,6 +342,46 @@ paths:
             text/json:
               schema:
                 $ref: '#/components/schemas/UserDTO'
+  /api/Users/bulk:
+    post:
+      tags:
+        - Users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/CreateUserDTO'
+          text/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/CreateUserDTO'
+          application/*+json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/CreateUserDTO'
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserDTO'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserDTO'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserDTO'
 components:
   schemas:
     AllCarsDTO:
@@ -492,6 +561,8 @@ components:
       enum:
         - NameAsc
         - NameDesc
+        - EmailAsc
+        - EmailDesc
         - CreatedAtAsc
         - CreatedAtDesc
         - UpdatedAtAsc

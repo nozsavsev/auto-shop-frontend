@@ -35,4 +35,11 @@ export class CarsApi {
     const method = api.apiCarsSearchGet;
     return await ExecuteApiRequest<typeof method>(method.bind(api), {...params});
   }
-} 
+
+  public async BulkCreateCars(params: AutoShopApi.ApiCarsBulkPostRequest = {}) {
+    const api = this.getCurrentApi();
+    const method = api.apiCarsBulkPost;
+    return await ExecuteApiRequest<typeof method>(method.bind(api), {...params});
+  }
+
+}   

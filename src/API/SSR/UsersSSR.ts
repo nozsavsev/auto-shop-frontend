@@ -39,4 +39,10 @@ export class UsersSSRApi {
     const method = api.apiUsersSearchGet;
     return await ExecuteApiRequest<typeof method>(method.bind(api), { ...params });
   }
+
+  public async BulkCreateUsers(params: AutoShopApi.ApiUsersBulkPostRequest & SSRConfigParameters) {
+    const api = this.getCurrentApi(params);
+    const method = api.apiUsersBulkPost;
+    return await ExecuteApiRequest<typeof method>(method.bind(api), { ...params });
+  }
 } 

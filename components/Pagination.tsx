@@ -23,7 +23,7 @@ export default function Pagination({ pagination }: PaginationProps) {
     }
 
     if(pagination.currentPage >= pagination.totalPages) {
-      pagination.setPage(pagination.totalPages - 1);
+      pagination.setPage(Math.max(0, pagination.totalPages - 1));
     }
 
     if(pagination.currentPage < 0) {

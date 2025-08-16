@@ -68,8 +68,8 @@ export default function CarRow({ car, updateCar, textMatch }: CarRowProps) {
                 onSubmit={async (values, { setSubmitting }) => {
                   const toastId = toast.loading("Updating car...");
                   const updateData: CreateUpdateCarDTO = {
-                    company: values.company,
-                    model: values.model,
+                    company: values.company ?? '',
+                    model: values.model ?? '',
                   };
                   await updateCar(updateData, toastId);
                   setIsEditModalOpen(false);

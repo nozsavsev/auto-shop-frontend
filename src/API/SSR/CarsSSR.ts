@@ -35,4 +35,10 @@ export class CarsSSRApi {
     const method = api.apiCarsSearchGet;
     return await ExecuteApiRequest<typeof method>(method.bind(api), { ...params });
   }
+
+  public async BulkCreateCars(params: AutoShopApi.ApiCarsBulkPostRequest & SSRConfigParameters) {
+    const api = this.getCurrentApi(params);
+    const method = api.apiCarsBulkPost;
+    return await ExecuteApiRequest<typeof method>(method.bind(api), { ...params });
+  }
 } 
