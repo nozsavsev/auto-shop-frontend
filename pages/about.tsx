@@ -188,13 +188,13 @@ export default function About() {
           </p>
           
           <div className="flex justify-center space-x-6">
-            <a href="https://github.com" className="text-blue-100 hover:text-white transition-colors">
+            <a href="https://github.com/nozsavsev" className="text-blue-100 hover:text-white transition-colors">
               <FaGithub className="w-6 h-6" />
             </a>
-            <a href="https://linkedin.com" className="text-blue-100 hover:text-white transition-colors">
+            <a href="https://www.linkedin.com/in/ilia-nozdrachev/" className="text-blue-100 hover:text-white transition-colors">
               <FaLinkedin className="w-6 h-6" />
             </a>
-            <a href="mailto:contact@example.com" className="text-blue-100 hover:text-white transition-colors">
+            <a href="mailto:nozsavsev@gmail.com" className="text-blue-100 hover:text-white transition-colors">
               <FaEnvelope className="w-6 h-6" />
             </a>
           </div>

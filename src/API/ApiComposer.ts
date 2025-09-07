@@ -1,34 +1,31 @@
-import * as AutoShopApi from './AutoShopApi';
-import { CarsApi, StatusApi, UsersApi } from './Client';
-import { CarsSSRApi, StatusSSRApi, UsersSSRApi } from './SSR';
+import * as AutoShopApi from "./AutoShopApi";
+import { CarsApi, StatusApi, UsersApi } from "./Client";
+import { CarsSSRApi, StatusSSRApi, UsersSSRApi } from "./SSR";
 
-const dev = process.env.NODE_ENV !== 'production';
-export const SSR_BasePath = dev ? 'http://localhost:5005' : 'http://auto-shop-api:5005';
-export const Client_BasePath = dev ? 'http://localhost:5005' : 'http://auto-shop-api:5005';
+const dev = process.env.NODE_ENV !== "production";
+export const SSR_BasePath = process.env.NEXT_PUBLIC_SSR_API_URL || "http://localhost:5005";
+export const Client_BasePath = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5005";
+
 export const GetDefaultConfig = () => {
   return new AutoShopApi.Configuration({
-    credentials: 'include',
+    credentials: "include",
     basePath: Client_BasePath,
   });
 };
 
-export type SSRConfigParameters = {
-};
-
+export type SSRConfigParameters = {};
 
 export const GetSSRDefaultConfig = (params: SSRConfigParameters) => {
   return new AutoShopApi.Configuration({
-    credentials: 'include',
+    credentials: "include",
     basePath: SSR_BasePath,
-    headers: {
-
-    },
+    headers: {},
   });
 };
 
 export type ResponseWrapper<T> = {
   data?: T;
-  error?: 'NOT_FOUND' | 'BAD_REQUEST' | 'INTERNAL_SERVER_ERROR' | 'NETWORK_ERROR';
+  error?: "NOT_FOUND" | "BAD_REQUEST" | "INTERNAL_SERVER_ERROR" | "NETWORK_ERROR";
 };
 
 export const ExecuteApiRequest = async <T extends (...args: any[]) => any>(
@@ -39,11 +36,10 @@ export const ExecuteApiRequest = async <T extends (...args: any[]) => any>(
     const response = await fn(...args);
     return { data: response };
   } catch (error: any) {
-    
     // Handle ResponseError from the generated API client
     if (error.response) {
       const status = error.response.status;
-      
+
       switch (status) {
         case 404:
           return { error: "NOT_FOUND" };
@@ -57,7 +53,7 @@ export const ExecuteApiRequest = async <T extends (...args: any[]) => any>(
     }
 
     // Handle network errors or other exceptions
-    if (typeof window !== 'undefined' && window.location.pathname !== "/503") {
+    if (typeof window !== "undefined" && window.location.pathname !== "/503") {
       window.location.replace("/503");
     }
 
@@ -77,4 +73,4 @@ export class API {
     Users: new UsersSSRApi(),
     Status: new StatusSSRApi(),
   };
-} 
+}

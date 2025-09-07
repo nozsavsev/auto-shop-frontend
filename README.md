@@ -1,92 +1,122 @@
 # Auto Shop Management System
 
-A modern, full-stack web application for managing automotive businesses, built with cutting-edge technologies and best practices. This project demonstrates advanced React/Next.js development skills with a focus on performance, user experience, and code quality.
+A modern web application for managing automotive businesses, built with Next.js and TypeScript. Features comprehensive user and car management with real-time search, pagination, and responsive design.
 
 ## Features
 
-### Core Functionality
-
 - **User Management**: Complete CRUD operations for users with car assignments
-- **Car Management**: Complete CRUD operations for cars with company and model
-- **Smart Search**: Debounced real-time search with highlighting and instant results
-- **Advanced Pagination**: Sticky pagination controls with customizable page sizes
-- **Responsive Design**: Mobile-first approach with seamless experience across all devices
-- **Data Validation**: Form validation with Yup schemas and comprehensive error handling
-
-### Performance Optimizations
-
-- **Debounced Search**: Reduces API calls by 70-80% during typing
-- **Server-Side Rendering (SSR)**: Optimal performance and SEO
-- **Optimistic Updates**: Instant feedback for better user experience
-- **Type-safe API Integration**: Auto-generated clients with full TypeScript support
-
-### User Experience
-
-- **Sticky Navigation**: Pagination controls always visible
-- **Real-time Feedback**: Toast notifications for all operations
-- **Loading States**: Smooth loading indicators throughout the app
-- **Error Handling**: Comprehensive error management with user-friendly messages
+- **Car Management**: Complete CRUD operations for cars with company and model tracking
+- **Smart Search**: Debounced real-time search with highlighting
+- **Advanced Pagination**: Configurable page sizes with sticky controls
+- **Responsive Design**: Mobile-first approach with cross-device compatibility
+- **Data Validation**: Form validation with comprehensive error handling
 
 ## Technology Stack
 
-### Frontend
-
-- **Next.js 13+** - React framework with SSR
-- **React 18** - Modern React with hooks and concurrent features
-- **TypeScript** - Full type safety throughout the application
-- **Tailwind CSS** - Utility-first CSS framework
-- **SWR** - Data fetching and caching library
-- **Formik** - Form management library
-- **Yup** - Schema validation library
-
-### Backend Integration
-
-- **RESTful API** - Type-safe API integration
-- **Auto-generated Clients** - OpenAPI/Swagger integration
-- **Error Handling** - Comprehensive error management
-
-### Development Tools
-
-- **ESLint** - Code linting and quality
-- **Prettier** - Code formatting
-- **TypeScript** - Static type checking
+- **Frontend**: Next.js 15, React 19, TypeScript, Tailwind CSS
+- **State Management**: SWR for data fetching and caching
+- **Forms**: Formik with Yup validation
+- **API Integration**: Auto-generated TypeScript clients from OpenAPI specs
+- **Build Output**: Standalone Docker-ready deployment
 
 ## Installation & Setup
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 22+
 - npm or yarn
-- Git
 
 ### Quick Start
 
 1. **Clone the repository**
-
    ```bash
    git clone https://github.com/yourusername/auto-shop-frontend.git
    cd auto-shop-frontend
    ```
 
 2. **Install dependencies**
-
    ```bash
    npm install
    # or
    yarn install
    ```
 
-3. **Important**
+3. **Configure API endpoints**
    
-   In `src/API/ApiComposer.ts`, change the basePath to the actual API URL.
+   The application uses environment variables to configure API endpoints. For development, it defaults to `http://localhost:5005`.
 
-4. **Run the development server**
-
+4. **Run development server**
    ```bash
    npm run dev
    # or
    yarn dev
    ```
 
-5. **Open your browser**
+5. **Open browser**
    Navigate to [http://localhost:3000](http://localhost:3000)
+
+## Deployment
+
+### Environment Configuration
+
+The application requires two environment variables for production deployment at build time:
+
+- `NEXT_PUBLIC_API_URL`: Client-side API endpoint
+- `NEXT_PUBLIC_SSR_API_URL`: Server-side rendering API endpoint
+
+### Docker Deployment
+
+Build the Docker image with API URL configuration:
+
+```bash
+# Build with custom API URLs
+docker build \
+  --build-arg NEXT_PUBLIC_API_URL=https://api.yourdomain.com \
+  --build-arg NEXT_PUBLIC_SSR_API_URL=https://api.yourdomain.com \
+  -t auto-shop-frontend .
+
+# Run the container
+docker run -p 3000:3000 auto-shop-frontend
+```
+
+### Environment File
+
+Create a `.env.local` file for local development:
+
+```bash
+NEXT_PUBLIC_API_URL=http://localhost:5005
+NEXT_PUBLIC_SSR_API_URL=http://localhost:5005
+```
+
+### Production Deployment
+
+For production environments, set the environment variables:
+
+```bash
+# Linux/macOS
+export NEXT_PUBLIC_API_URL=https://api.yourdomain.com
+export NEXT_PUBLIC_SSR_API_URL=https://api.yourdomain.com
+
+# Windows PowerShell
+$env:NEXT_PUBLIC_API_URL="https://api.yourdomain.com"
+$env:NEXT_PUBLIC_SSR_API_URL="https://api.yourdomain.com"
+```
+
+### Build and Start
+
+```bash
+# Build for production
+npm run build
+
+# Start production server
+npm start
+```
+
+## API Configuration
+
+The application automatically configures API endpoints based on the environment:
+
+- **Development**: Uses `http://localhost:5005` by default
+- **Production**: Uses environment variables `NEXT_PUBLIC_API_URL` and `NEXT_PUBLIC_SSR_API_URL`
+
+API configuration is handled in `src/API/ApiComposer.ts` and supports both client-side and server-side rendering contexts.

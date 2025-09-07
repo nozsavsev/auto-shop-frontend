@@ -54,7 +54,9 @@ export default function CreateUserButton({ onSuccess }: CreateUserButtonProps) {
 
 
 const AddUserSchema = Yup.object().shape({
-  name: Yup.string().required("Name is required"),
+  name: Yup.string()
+    .required("Name is required")
+    .max(100, "Name must be 100 characters or less"),
   email: Yup.string().email("Invalid email").required("Email is required"),
   password: Yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
 });

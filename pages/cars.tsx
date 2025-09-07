@@ -1,9 +1,8 @@
-import { AiOutlineLoading } from "react-icons/ai";
-import { IoBanOutline, IoRefreshOutline } from "react-icons/io5";
+import { IoBanOutline } from "react-icons/io5";
 import { Id, toast } from "react-toastify";
-import ModernCarRow from "../components/cars/ModernCarRow";
-import FillWithCarsButton from "../components/cars/FillWithCarsButton";
-import CreateCarButton from "../components/cars/CreateCarButton";
+import ModernCarRow from "@/components/cars/ModernCarRow";
+import FillWithCarsButton from "@/components/cars/FillWithCarsButton";
+import CreateCarButton from "@/components/cars/CreateCarButton";
 import Pagination from "@/components/Pagination";
 import { AllCarsDTO, CreateUpdateCarDTO, CarSortByNullable } from "@/src/API/AutoShopApi";
 import { useCars } from "@/src/hooks/useCars";
@@ -12,8 +11,6 @@ import { useRouter } from "next/router";
 import { API, ResponseWrapper } from "@/src/API";
 import { GetServerSidePropsContext } from "next";
 import { FaCar } from "react-icons/fa";
-import { FaCross } from "react-icons/fa6";
-import { RxCross1, RxCross2 } from "react-icons/rx";
 import { SearchBar } from "@/components/SearchBar";
 import { FullTableMessage } from "@/components/FullTableMessage";
 import { useSelection } from "@/src/hooks/useSelection";
@@ -26,12 +23,6 @@ type CarsPageProps = {
   initialPageSize: number;
   initialCars: ResponseWrapper<AllCarsDTO>;
   initialSortBy?: CarSortByNullable;
-};
-
-type CarsPageQuery = {
-  q?: string;
-  s?: number;
-  t?: number;
 };
 
 export default function Cars({ initialSearch, initialPage, initialPageSize, initialCars, initialSortBy }: CarsPageProps) {
@@ -55,6 +46,9 @@ export default function Cars({ initialSearch, initialPage, initialPageSize, init
       switch (key) {
         case 'company':
           apiSort = dir === 'asc' ? CarSortByNullable.CompanyAsc : CarSortByNullable.CompanyDesc;
+          break;
+        case 'model':
+          apiSort = dir === 'asc' ? CarSortByNullable.ModelAsc : CarSortByNullable.ModelDesc;
           break;
         case 'createdAt':
           apiSort = dir === 'asc' ? CarSortByNullable.CreatedAtAsc : CarSortByNullable.CreatedAtDesc;
@@ -114,7 +108,7 @@ export default function Cars({ initialSearch, initialPage, initialPageSize, init
   };
 
   return (
-    <div className="flex flex-col w-full p-6 h-[calc(100vh-4rem)]">
+    <div className="flex flex-col w-full p-6 ">
       <div className="flex flex-col gap-4 mb-6 w-full">
         <h1
           onClick={() => {
@@ -154,22 +148,36 @@ export default function Cars({ initialSearch, initialPage, initialPageSize, init
                   />
                 </th>
                 <SortableHeader
-                  label="Car"
+                  label="Company"
                   sortKey="company"
                   currentSortKey={sortKey}
                   currentDirection={sortDirection}
                   onSort={handleSort}
                 />
-                <th className="font-semibold px-4 py-3 bg-white text-left select-none">Users</th>
                 <SortableHeader
-                  label="Last active"
+                  label="Model"
+                  sortKey="model"
+                  currentSortKey={sortKey}
+                  currentDirection={sortDirection}
+                  onSort={handleSort}
+                />
+                <SortableHeader
+                  disabled={true}
+                  label="Users"
+                  sortKey="none"
+                  currentSortKey={sortKey}
+                  currentDirection={sortDirection}
+                  onSort={handleSort}
+                />
+                <SortableHeader
+                  label="Last updated"
                   sortKey="updatedAt"
                   currentSortKey={sortKey}
                   currentDirection={sortDirection}
                   onSort={handleSort}
                 />
                 <SortableHeader
-                  label="Date added"
+                  label="Date created"
                   sortKey="createdAt"
                   currentSortKey={sortKey}
                   currentDirection={sortDirection}

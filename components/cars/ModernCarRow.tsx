@@ -74,7 +74,7 @@ export default function ModernCarRow({
           />
         </td>
         
-        <td className="px-4 py-4">
+        <td colSpan={2} className="px-4 py-4">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
               <IoCar className="w-6 h-6 text-gray-500" />

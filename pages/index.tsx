@@ -165,7 +165,7 @@ export default function Users({
   };
 
   return (
-    <div className="flex flex-col w-full p-6 h -[calc(100vh-4rem)]">
+    <div className="flex flex-col w-full p-6">
       <div className="flex flex-col gap-4 mb-6 w-full">
         <h1
           onClick={() => {

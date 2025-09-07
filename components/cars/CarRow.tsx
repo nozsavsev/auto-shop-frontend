@@ -19,8 +19,12 @@ interface CarRowProps {
 }
 
 const validationSchema = Yup.object().shape({
-  company: Yup.string().required("Company is required"),
-  model: Yup.string().required("Model is required"),
+  company: Yup.string()
+    .required("Company is required")
+    .max(100, "Company must be 100 characters or less"),
+  model: Yup.string()
+    .required("Model is required")
+    .max(100, "Model must be 100 characters or less"),
 });
 
 export default function CarRow({ car, updateCar, textMatch }: CarRowProps) {
