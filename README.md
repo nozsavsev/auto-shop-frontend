@@ -1,5 +1,7 @@
 # Auto Shop Management System
 
+*a test assignment for one of the interviews meant to showcase applicable best practices in modern frontend and backend development
+
 A modern web application for managing automotive businesses, built with Next.js and TypeScript. Features comprehensive user and car management with real-time search, pagination, and responsive design.
 
 ## Features
