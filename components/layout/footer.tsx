@@ -19,6 +19,9 @@ const Footer = () => {
             <Link className="mx-2" href={"/"}>
               Users
             </Link>
+            <Link className="mx-2" href={"https://nozsa.com/legal"}>
+              Legal
+            </Link>
           </div>
           <div className="mx-2 h-10 bg-black sm:w-px" />
 
