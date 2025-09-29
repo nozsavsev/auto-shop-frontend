@@ -25,7 +25,6 @@ const Er_500 = ({ }: any) => {
 
   return (
     <div
-      onClick={() => setIsConnected(!isConnected)}
       className={`
         ${isConnected ? "from-green-900  to-green-950" : "from-red-900  to-red-950"}
       min-h-screen bg-radial flex items-center justify-center p-4`}>
