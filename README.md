@@ -61,25 +61,11 @@ A modern web application for managing automotive businesses, built with Next.js 
 
 ### Environment Configuration
 
-The application requires two environment variables for production deployment at build time:
+The application requires two environment variables for production deployment at run-time:
 
 - `NEXT_PUBLIC_API_URL`: Client-side API endpoint
 - `NEXT_PUBLIC_SSR_API_URL`: Server-side rendering API endpoint
 
-### Docker Deployment
-
-Build the Docker image with API URL configuration:
-
-```bash
-# Build with custom API URLs
-docker build \
-  --build-arg NEXT_PUBLIC_API_URL=https://api.yourdomain.com \
-  --build-arg NEXT_PUBLIC_SSR_API_URL=https://api.yourdomain.com \
-  -t auto-shop-frontend .
-
-# Run the container
-docker run -p 3000:3000 auto-shop-frontend
-```
 
 ### Environment File
 

@@ -13,22 +13,28 @@ import {
   FaUsers,
   FaSearch,
   FaCog,
-  FaCheckCircle
+  FaCheckCircle,
+  FaArrowRight
 } from "react-icons/fa";
 import { SiTypescript, SiTailwindcss, SiNextdotjs, SiSwr, SiFormik, SiPostgresql, SiDotnet } from "react-icons/si";
 import { IoStatsChart } from "react-icons/io5";
 import Image from "next/image";
+import Link from "next/link";
 export default function About() {
   const features = [
     {
       icon: <FaUsers className="w-6 h-6" />,
       title: "User Management",
-      description: "Complete CRUD operations for users with car assignments, search, and pagination"
+      description: "Complete CRUD operations for users with car assignments, search, and pagination",
+      ctaLink: "/users",
+      ctaText: "Manage Users"
     },
     {
       icon: <FaCar className="w-6 h-6" />,
       title: "Car Management", 
-      description: "Complete CRUD operations for cars with company and model"
+      description: "Complete CRUD operations for cars with company and model",
+      ctaLink: "/cars",
+      ctaText: "Manage Cars"
     },
     {
       icon: <FaSearch className="w-6 h-6" />,
@@ -121,7 +127,16 @@ export default function About() {
                   </div>
                   <h3 className="text-xl font-semibold text-gray-900">{feature.title}</h3>
                 </div>
-                <p className="text-gray-600 leading-relaxed">{feature.description}</p>
+                <p className="text-gray-600 leading-relaxed mb-4">{feature.description}</p>
+                {feature.ctaLink && feature.ctaText && (
+                  <Link 
+                    href={feature.ctaLink}
+                    className="inline-flex items-center px-4 py-2 text-blue-600 text-sm font-medium rounded-lg hover:bg-blue-600 hover:text-white transition-colors duration-200"
+                  >
+                    {feature.ctaText}
+                    <FaArrowRight className="ml-2 w-3 h-3" />
+                  </Link>
+                )}
               </div>
             ))}
           </div>
@@ -197,6 +212,26 @@ export default function About() {
             <a href="mailto:nozsavsev@gmail.com" className="text-blue-100 hover:text-white transition-colors">
               <FaEnvelope className="w-6 h-6" />
             </a>
+          </div>
+          
+          <div className="mt-8 pt-8 border-t border-blue-500/20">
+            <h3 className="text-lg font-semibold text-white mb-4">Source Code</h3>
+            <div className="flex justify-center space-x-4">
+              <a 
+                href="https://github.com/nozsavsev/auto-shop-frontend" 
+                className="inline-flex items-center px-4 py-2 bg-white/10 text-white text-sm font-medium rounded-lg hover:bg-white/20 transition-colors duration-200"
+              >
+                <FaGithub className="mr-2 w-4 h-4" />
+                Frontend
+              </a>
+              <a 
+                href="https://github.com/nozsavsev/AutoShopAPI" 
+                className="inline-flex items-center px-4 py-2 bg-white/10 text-white text-sm font-medium rounded-lg hover:bg-white/20 transition-colors duration-200"
+              >
+                <FaGithub className="mr-2 w-4 h-4" />
+                Backend
+              </a>
+            </div>
           </div>
         </div>
       </div>
